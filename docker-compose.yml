@@ -1,11 +1,17 @@
 version: '1.0'
 services:
   paperless_rest_service:
-    build: ./paperless_rest_service
+    build: ./rest-service
     container_name: paperless_rest_service
     hostname: paperless_rest_service
     ports:
       - "8081:8081"
+  paperless_ui_service:
+    build: ./ui-service
+    container_name: paperless_ui_service
+    hostname: paperless_ui_service
+    ports:
+      - "8080:80"
 networks:
   swkom3:
     driver: bridge
