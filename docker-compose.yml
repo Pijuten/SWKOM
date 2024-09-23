@@ -2,8 +2,8 @@ version: '1.0'
 services:
   paperless_rest_service:
     build: ./rest-service
-    container_name: paperless_rest_service
-    hostname: paperless_rest_service
+    container_name: rest_service
+    hostname: rest_service
     ports:
       - "8081:8081"
   paperless_ui_service:
