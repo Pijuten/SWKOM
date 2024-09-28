@@ -1,6 +1,6 @@
 <template>
   <div class="upload-zone">
-    <h3>Upload</h3>
+    <h3>Upload a new File</h3>
     <input type="file" multiple @change="onFileSelect" />
     <p>Drag & Drop your files here or click to select</p>
   </div>

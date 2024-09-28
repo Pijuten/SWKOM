@@ -4,8 +4,20 @@
     <ul>
       <li v-for="(file, index) in files" :key="index">
         {{ file.id }}
-        <button @click="editFile(file.id)">Edit</button>
-        <button @click="deleteFile(file.id)">Delete</button>
+        <img
+            title="Edit this file"
+            src="../assets/carbon_edit.png"
+            alt="Edit Icon"
+            class="edit-icon"
+            @click="editFile(file.id)"
+        />
+        <img
+            title="Delete this file"
+            src="../assets/mi_delete.png"
+            alt="Delete Icon"
+            class="delete-icon"
+            @click="deleteFile(file.id)"
+        />
       </li>
     </ul>
   </div>
@@ -33,13 +45,18 @@
 
 <!--style -->
 <style scoped>
+img {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
 .file-list {
   max-width: 99%;
-  margin: 0 auto;
   padding: 30px;
   border-radius: 12px;
   background-color: #f7f9fc;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  margin-right: 40px;
 }
 
 .file-list h3 {
@@ -60,7 +77,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 30px;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
