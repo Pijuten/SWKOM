@@ -3,9 +3,9 @@
     <h3>Uploaded files</h3>
     <ul>
       <li v-for="(file, index) in files" :key="index">
-        {{ file.name }}
-        <button @click="editFile(index)">Edit</button>
-        <button @click="deleteFile(index)">Delete</button>
+        {{ file.id }}
+        <button @click="editFile(file.id)">Edit</button>
+        <button @click="deleteFile(file.id)">Delete</button>
       </li>
     </ul>
   </div>
@@ -15,12 +15,12 @@
   import { defineEmits, defineProps } from 'vue';
   const props = defineProps({
     files: {
-      type: Array as () => Array<{ name: string }>, // Define the type for the files
+      type: Array as () => Document, // Define the type for the files
       required: true
     }
   });
   const emit = defineEmits(['delete-file', 'edit-file']);
-  const deleteFile = (index: number) => {
+  const deleteFile = (index: string) => {
     emit('delete-file', index);
   };
   const editFile = (index: number) => {
