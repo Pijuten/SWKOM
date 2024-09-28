@@ -36,12 +36,12 @@ public class DocumentsApiController implements DocumentsApi {
 
     @Override
     public ResponseEntity<DocumentContent> documentsDocumentIdContentGet(UUID documentId) {
-        return DocumentsApi.super.documentsDocumentIdContentGet(documentId);
+        return ResponseEntity.ok(documentService.getDocumentContent(documentId));
     }
 
     @Override
     public ResponseEntity<Document> documentsDocumentIdContentPut(UUID documentId, Document document) {
-        return DocumentsApi.super.documentsDocumentIdContentPut(documentId, document);
+        return ResponseEntity.ok(documentService.putDocumentContent(documentId,document));
     }
 
     @Override
