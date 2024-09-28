@@ -20,11 +20,13 @@
         />
       </li>
     </ul>
+    <edit-form v-if="isEditing" :file="selectedFile" @save-edits="saveFileEdits" @cancel-edit="cancelEdit" />
   </div>
 </template>
 
 <script setup lang="ts">
-  import { defineEmits, defineProps } from 'vue';
+  import { defineEmits, defineProps, ref } from 'vue';
+  import EditForm from './EditForm.vue';
 
   const props = defineProps({
     files: {
@@ -33,11 +35,21 @@
     }
   });
   const emit = defineEmits(['delete-file', 'edit-file']);
+  const isEditing = ref(false);
+  const selectedFile = ref(null);
   const deleteFile = (index: string) => {
     emit('delete-file', index);
   };
-  const editFile = (index: number) => {
-    emit('edit-file', index);
+  const editFile = (file: any) => {
+    selectedFile.value = file;
+    isEditing.value = true;
+  };
+  const saveFileEdits = (updatedFile: any) => {
+    emit('update-file', updatedFile);
+    isEditing.value = false;
+  };
+  const cancelEdit = () => {
+    isEditing.value = false;
   };
 </script>
 
