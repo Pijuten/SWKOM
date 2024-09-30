@@ -1,0 +1,140 @@
+<template>
+  <div class="file-list">
+    <h3>Uploaded files</h3>
+    <ul>
+      <li v-for="(file, index) in files" :key="index">
+        {{ file.id }}
+        <img
+            title="Edit this file"
+            src="../assets/carbon_edit.png"
+            alt="Edit Icon"
+            class="edit-icon"
+            @click="editFile(file.id)"
+        />
+        <img
+            title="Delete this file"
+            src="../assets/mi_delete.png"
+            alt="Delete Icon"
+            class="delete-icon"
+            @click="deleteFile(file.id)"
+        />
+      </li>
+    </ul>
+    <edit-form v-if="isEditing" :file="selectedFile" @save-edits="saveFileEdits" @cancel-edit="cancelEdit" />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { defineEmits, defineProps, ref } from 'vue';
+  import EditForm from './EditForm.vue';
+
+  const props = defineProps({
+    files: {
+      type: Array as () => Document, // Define the type for the files
+      required: true
+    }
+  });
+  const emit = defineEmits(['delete-file', 'edit-file']);
+  const isEditing = ref(false);
+  const selectedFile = ref(null);
+  const deleteFile = (index: string) => {
+    emit('delete-file', index);
+  };
+  const editFile = (file: any) => {
+    selectedFile.value = file;
+    isEditing.value = true;
+  };
+  const saveFileEdits = (updatedFile: any) => {
+    emit('update-file', updatedFile);
+    isEditing.value = false;
+  };
+  const cancelEdit = () => {
+    isEditing.value = false;
+  };
+</script>
+
+
+
+<!--style -->
+<style scoped>
+img {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.file-list {
+  max-width: 99%;
+  padding: 30px;
+  border-radius: 12px;
+  background-color: #f7f9fc;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  margin-right: 40px;
+}
+
+.file-list h3 {
+  font-size: 1.3rem;
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.file-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.file-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  margin-bottom: 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-wrap: nowrap;
+}
+
+.file-list li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.file-name {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #333;
+  flex-grow: 1;
+  word-break: break-all;
+  margin-right: 40px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.file-actions button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-actions button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.file-actions button:active {
+  transform: scale(0.98);
+}
+
+</style>
