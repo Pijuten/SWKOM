@@ -19,10 +19,12 @@ import javax.annotation.Generated;
  * Document
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-09-23T21:57:54.609887200+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T20:18:17.608293+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 public class Document {
 
   private UUID id;
+
+  private String title;
 
   private String username;
 
@@ -48,6 +50,26 @@ public class Document {
 
   public void setId(UUID id) {
     this.id = id;
+  }
+
+  public Document title(String title) {
+    this.title = title;
+    return this;
+  }
+
+  /**
+   * Get title
+   * @return title
+   */
+  
+  @Schema(name = "title", example = "Title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("title")
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public Document username(String username) {
@@ -120,6 +142,7 @@ public class Document {
     }
     Document document = (Document) o;
     return Objects.equals(this.id, document.id) &&
+        Objects.equals(this.title, document.title) &&
         Objects.equals(this.username, document.username) &&
         Objects.equals(this.description, document.description) &&
         Objects.equals(this.uploadedDate, document.uploadedDate);
@@ -127,7 +150,7 @@ public class Document {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, username, description, uploadedDate);
+    return Objects.hash(id, title, username, description, uploadedDate);
   }
 
   @Override
@@ -135,6 +158,7 @@ public class Document {
     StringBuilder sb = new StringBuilder();
     sb.append("class Document {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    uploadedDate: ").append(toIndentedString(uploadedDate)).append("\n");

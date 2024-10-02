@@ -3,20 +3,20 @@
     <h3>Uploaded files</h3>
     <ul>
       <li v-for="(file, index) in files" :key="index">
-        {{ file.id }}
+        {{ file.title }}
         <img
             title="Edit this file"
             src="../assets/carbon_edit.png"
             alt="Edit Icon"
             class="edit-icon"
-            @click="editFile(file.id)"
+            @click="editFile(file)"
         />
         <img
             title="Delete this file"
             src="../assets/mi_delete.png"
             alt="Delete Icon"
             class="delete-icon"
-            @click="deleteFile(file.id)"
+            @click="deleteFile(file)"
         />
       </li>
     </ul>
@@ -45,7 +45,7 @@
     isEditing.value = true;
   };
   const saveFileEdits = (updatedFile: any) => {
-    emit('update-file', updatedFile);
+    emit('edit-file', updatedFile);
     isEditing.value = false;
   };
   const cancelEdit = () => {

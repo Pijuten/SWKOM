@@ -43,10 +43,14 @@ const deleteFile = (index: string) => {
   uploadedFiles.value.splice(index, 1);
 };
 
-const editFile = (index: string, newDocument: Document) => {
-  // Handle the logic to edit the file, e.g., rename it
-  documentsApi.documentsDocumentIdContentPut(index,newDocument)
-  console.log(`Edit file at index ${index}`);
+const editFile = async (newDocument: Document) => {
+  try {
+    await documentsApi.documentsDocumentIdContentPut(newDocument.id, newDocument);
+    // After successful edit, fetch the updated list
+    await fetchFiles();
+  } catch (error) {
+    console.error('Error editing file:', error);
+  }
 };
 </script>
 

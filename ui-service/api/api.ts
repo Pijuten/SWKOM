@@ -40,6 +40,12 @@ export interface Document {
      * @type {string}
      * @memberof Document
      */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Document
+     */
     'username'?: string;
     /**
      * 

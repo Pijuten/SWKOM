@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * DocumentContent
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-09-23T21:57:54.609887200+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T20:18:17.608293+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 public class DocumentContent {
 
   private UUID id;
