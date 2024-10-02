@@ -11,5 +11,5 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/openapi-spring-1.0.11.jar ./app.jar
-EXPOSE 8080
+EXPOSE 8081
 CMD ["java", "-jar", "app.jar"]

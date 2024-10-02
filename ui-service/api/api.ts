@@ -59,6 +59,12 @@ export interface Document {
      * @memberof Document
      */
     'uploaded_date'?: string;
+    /**
+     * 
+     * @type {File}
+     * @memberof Document
+     */
+    'file'?: File;
 }
 /**
  * 

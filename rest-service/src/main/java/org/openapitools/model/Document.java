@@ -19,7 +19,7 @@ import javax.annotation.Generated;
  * Document
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T20:18:17.608293+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T21:26:49.945851+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 public class Document {
 
   private UUID id;
@@ -31,6 +31,8 @@ public class Document {
   private String description;
 
   private String uploadedDate;
+
+  private org.springframework.core.io.Resource file;
 
   public Document id(UUID id) {
     this.id = id;
@@ -132,6 +134,26 @@ public class Document {
     this.uploadedDate = uploadedDate;
   }
 
+  public Document file(org.springframework.core.io.Resource file) {
+    this.file = file;
+    return this;
+  }
+
+  /**
+   * Get file
+   * @return file
+   */
+  @Valid 
+  @Schema(name = "file", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("file")
+  public org.springframework.core.io.Resource getFile() {
+    return file;
+  }
+
+  public void setFile(org.springframework.core.io.Resource file) {
+    this.file = file;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -145,12 +167,13 @@ public class Document {
         Objects.equals(this.title, document.title) &&
         Objects.equals(this.username, document.username) &&
         Objects.equals(this.description, document.description) &&
-        Objects.equals(this.uploadedDate, document.uploadedDate);
+        Objects.equals(this.uploadedDate, document.uploadedDate) &&
+        Objects.equals(this.file, document.file);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, username, description, uploadedDate);
+    return Objects.hash(id, title, username, description, uploadedDate, file);
   }
 
   @Override
@@ -162,6 +185,7 @@ public class Document {
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    uploadedDate: ").append(toIndentedString(uploadedDate)).append("\n");
+    sb.append("    file: ").append(toIndentedString(file)).append("\n");
     sb.append("}");
     return sb.toString();
   }
