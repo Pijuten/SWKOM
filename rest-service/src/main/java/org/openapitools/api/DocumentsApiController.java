@@ -18,10 +18,13 @@ import javax.annotation.Generated;
 @Controller
 @RequestMapping("${openapi.sWKOM.base-path:}")
 public class DocumentsApiController implements DocumentsApi {
+    private final DocumentContentRepository documentContentRepository;
+
     @Autowired
-    public DocumentsApiController(DocumentService documentService, NativeWebRequest request) {
+    public DocumentsApiController(DocumentService documentService, NativeWebRequest request, DocumentContentRepository documentContentRepository) {
         this.documentService = documentService;
         this.request = request;
+        this.documentContentRepository = documentContentRepository;
     }
 
     private final DocumentService documentService;
@@ -34,33 +37,44 @@ public class DocumentsApiController implements DocumentsApi {
         return Optional.ofNullable(request);
     }
 
+    //Create Document
     @Override
-    public ResponseEntity<DocumentContent> documentsDocumentIdContentGet(UUID documentId) {
-        return ResponseEntity.ok(documentService.getDocumentContent(documentId));
+    public ResponseEntity<Document> documentsPost(Document document) {
+        return ResponseEntity.ok(documentService.createDocument(document));
     }
 
-    @Override
-    public ResponseEntity<Document> documentsDocumentIdContentPut(UUID documentId, Document document) {
-        return ResponseEntity.ok(documentService.putDocumentContent(documentId,document));
-    }
-
-    @Override
-    public ResponseEntity documentsDocumentIdDelete(UUID documentId) {
-        return ResponseEntity.ok(documentService.deleteDocumentById(documentId));
-    }
-
+    //Read Documents
     @Override
     public ResponseEntity<Document> documentsDocumentIdGet(UUID documentId) {
         return ResponseEntity.ok(documentService.getDocumentById(documentId));
     }
-
     @Override
     public ResponseEntity<List<Document>> documentsGet() {
         return ResponseEntity.ok(documentService.getDocuments());
     }
 
+    //Update Documents
     @Override
-    public ResponseEntity<Document> documentsPost(Document document) {
+    public ResponseEntity<Document> documentsPut(Document document) {
         return ResponseEntity.ok(documentService.createDocument(document));
     }
+
+    //Delete Documents
+    @Override
+    public ResponseEntity documentsDocumentIdDelete(UUID documentId) {
+        return ResponseEntity.ok(documentService.deleteDocumentById(documentId));
+    }
+
+    //Create/Update DocumentContent
+    @Override
+    public ResponseEntity<DocumentContent> documentsContentPut(DocumentContent documentContent) {
+        return ResponseEntity.ok(documentService.saveDocumentContent(documentContent));
+    }
+
+    //Read DocumentContent
+    @Override
+    public ResponseEntity<DocumentContent> documentsDocumentIdContentGet(UUID documentId) {
+        return ResponseEntity.ok(documentService.getDocumentContent(documentId));
+    }
+
 }

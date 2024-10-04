@@ -70,6 +70,35 @@ paths:
       - application/json
       x-tags:
       - tag: documents
+    put:
+      description: Allows users to update a document.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Document successfully created
+        "400":
+          description: Invalid input
+        "422":
+          description: Validation exception
+      security:
+      - swkom_auth: []
+      summary: Updates document.
+      tags:
+      - documents
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+      x-tags:
+      - tag: documents
   /documents/{documentId}:
     delete:
       description: Deletes an existing document. Only allowed if the user owns the

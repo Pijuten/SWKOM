@@ -5,7 +5,6 @@
  */
 package org.openapitools.api;
 
-import org.openapitools.api.ApiUtil;
 import org.openapitools.model.Document;
 import org.openapitools.model.DocumentContent;
 import java.util.UUID;
@@ -35,7 +34,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T20:18:17.608293+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-05T01:39:53.230455200+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 @Validated
 @Tag(name = "documents", description = "Documents user uploads and maintains")
 public interface DocumentsApi {
@@ -43,6 +42,55 @@ public interface DocumentsApi {
     default Optional<NativeWebRequest> getRequest() {
         return Optional.empty();
     }
+
+    /**
+     * PUT /documents/content : Updates the content of an existing document.
+     * Allows users to upload new content for an existing document.
+     *
+     * @param documentContent  (required)
+     * @return Document content successfully updated (status code 200)
+     *         or Invalid input (status code 400)
+     *         or Validation exception (status code 422)
+     */
+    @Operation(
+        operationId = "documentsContentPut",
+        summary = "Updates the content of an existing document.",
+        description = "Allows users to upload new content for an existing document.",
+        tags = { "documents" },
+        responses = {
+            @ApiResponse(responseCode = "200", description = "Document content successfully updated", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = DocumentContent.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "422", description = "Validation exception")
+        },
+        security = {
+            @SecurityRequirement(name = "swkom_auth", scopes={ "write:documents", "read:documents" })
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/documents/content",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    default ResponseEntity<DocumentContent> documentsContentPut(
+        @Parameter(name = "DocumentContent", description = "", required = true) @Valid @RequestBody DocumentContent documentContent
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"content\" : \"content\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
 
     /**
      * GET /documents/{documentId}/content
@@ -80,63 +128,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"content\" : \"content\" }";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
                     String exampleString = "<null> <id>550e8400-e29b-41d4-a716-446655440000</id> <content>aeiou</content> </null>";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
-                    break;
-                }
-            }
-        });
-        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-
-    }
-
-
-    /**
-     * PUT /documents/{documentId}/content : Updates the content of an existing document.
-     * Allows users to upload new content for an existing document.
-     *
-     * @param documentId  (required)
-     * @param document  (required)
-     * @return Document content successfully updated (status code 200)
-     *         or Invalid input (status code 400)
-     *         or Validation exception (status code 422)
-     */
-    @Operation(
-        operationId = "documentsDocumentIdContentPut",
-        summary = "Updates the content of an existing document.",
-        description = "Allows users to upload new content for an existing document.",
-        tags = { "documents" },
-        responses = {
-            @ApiResponse(responseCode = "200", description = "Document content successfully updated", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Document.class))
-            }),
-            @ApiResponse(responseCode = "400", description = "Invalid input"),
-            @ApiResponse(responseCode = "422", description = "Validation exception")
-        },
-        security = {
-            @SecurityRequirement(name = "swkom_auth", scopes={ "write:documents", "read:documents" })
-        }
-    )
-    @RequestMapping(
-        method = RequestMethod.PUT,
-        value = "/documents/{documentId}/content",
-        produces = { "application/json" },
-        consumes = { "application/json" }
-    )
-    
-    default ResponseEntity<Document> documentsDocumentIdContentPut(
-        @Parameter(name = "documentId", description = "", required = true, in = ParameterIn.PATH) @PathVariable("documentId") UUID documentId,
-        @Parameter(name = "Document", description = "", required = true) @Valid @RequestBody Document document
-    ) {
-        getRequest().ifPresent(request -> {
-            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
-                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
-                    String exampleString = "{ \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
@@ -221,12 +218,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <title>Title</title> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
+                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
+                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
@@ -272,12 +269,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "[ { \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }, { \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" } ]";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <title>Title</title> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
-                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
+                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
+                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
@@ -320,6 +317,55 @@ public interface DocumentsApi {
     )
     
     default ResponseEntity<Document> documentsPost(
+        @Parameter(name = "Document", description = "", required = true) @Valid @RequestBody Document document
+    ) {
+        getRequest().ifPresent(request -> {
+            for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
+                if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
+                    String exampleString = "{ \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }";
+                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    break;
+                }
+            }
+        });
+        return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
+    }
+
+
+    /**
+     * PUT /documents : Updates document.
+     * Allows users to update a document.
+     *
+     * @param document  (required)
+     * @return Document successfully created (status code 201)
+     *         or Invalid input (status code 400)
+     *         or Validation exception (status code 422)
+     */
+    @Operation(
+        operationId = "documentsPut",
+        summary = "Updates document.",
+        description = "Allows users to update a document.",
+        tags = { "documents" },
+        responses = {
+            @ApiResponse(responseCode = "201", description = "Document successfully created", content = {
+                @Content(mediaType = "application/json", schema = @Schema(implementation = Document.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "422", description = "Validation exception")
+        },
+        security = {
+            @SecurityRequirement(name = "swkom_auth")
+        }
+    )
+    @RequestMapping(
+        method = RequestMethod.PUT,
+        value = "/documents",
+        produces = { "application/json" },
+        consumes = { "application/json" }
+    )
+    
+    default ResponseEntity<Document> documentsPut(
         @Parameter(name = "Document", description = "", required = true) @Valid @RequestBody Document document
     ) {
         getRequest().ifPresent(request -> {

@@ -6,12 +6,53 @@ services:
     hostname: rest_service
     ports:
       - "8081:8081"
+    depends_on:
+      - postgres_db
+    networks:
+      - swkom3
+
   paperless_ui_service:
     build: ./ui-service
     container_name: paperless_ui_service
     hostname: paperless_ui_service
     ports:
       - "8080:80"
+    depends_on:
+      - paperless_rest_service
+    networks:
+      - swkom3
+
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    hostname: postgres_db
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless123
+      POSTGRES_SCHEMA: paperless_schema
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - swkom3
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    hostname: adminer
+    ports:
+      - "8082:8080"
+    depends_on:
+      - postgres_db
+    networks:
+      - swkom3
+
+volumes:
+  postgres_data:
+
 networks:
   swkom3:
     driver: bridge
