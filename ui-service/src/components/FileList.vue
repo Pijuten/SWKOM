@@ -20,6 +20,14 @@
             class="delete-icon"
             @click="deleteFile(file.id)"
         />
+          <img
+              title="View this file"
+              src="../assets/view.png"
+              alt="View Icon"
+              class="view-icon"
+              @click="viewFileContent(file)"
+          />
+
         </div>
       </li>
     </ul>
@@ -54,6 +62,45 @@
   const cancelEdit = () => {
     isEditing.value = false;
   };
+
+
+  // Show file content in a new window or tab
+  const viewFileContent = (file: any) => {
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const text = e.target?.result; // File content
+
+      // Open a new window
+      const newWindow = window.open('', '_blank'); // '_blank' opens a new tab
+
+      // Write the content to the new window
+      if (newWindow) {
+        newWindow.document.write(`
+        <html lang="en">
+          <head>
+            <title>${file.name}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              pre { white-space: pre-wrap; word-wrap: break-word; }
+            </style>
+          </head>
+          <body>
+            <h2>Content of ${file.name}</h2>
+            <pre>${text}</pre>
+            <button onclick="window.close();">Close</button>
+          </body>
+        </html>
+      `);
+        newWindow.document.close(); // Close the document to render
+      }
+    };
+
+    // Read file as text
+    reader.readAsText(file);
+  };
+
+
+
 </script>
 
 
@@ -138,6 +185,11 @@ img {
 
 .file-actions button:active {
   transform: scale(0.98);
+}
+
+.view-icon {
+  width: 24px;
+  height: 24px;
 }
 
 </style>
