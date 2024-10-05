@@ -3,6 +3,8 @@
     <h3>Uploaded files</h3>
     <ul>
       <li v-for="(file, index) in files" :key="index">
+        <span class="file-name"> {{file.name}} </span> <!--display file name-->
+        <div class = file-actions>
         {{ file.id }}
         <img
             title="Edit this file"
@@ -18,6 +20,7 @@
             class="delete-icon"
             @click="deleteFile(file.id)"
         />
+        </div>
       </li>
     </ul>
     <edit-form v-if="isEditing" :file="selectedFile" @save-edits="saveFileEdits" @cancel-edit="cancelEdit" />
