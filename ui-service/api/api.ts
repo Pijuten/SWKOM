@@ -40,6 +40,12 @@ export interface Document {
      * @type {string}
      * @memberof Document
      */
+    'title'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Document
+     */
     'username'?: string;
     /**
      * 
@@ -53,6 +59,12 @@ export interface Document {
      * @memberof Document
      */
     'uploaded_date'?: string;
+    /**
+     * 
+     * @type {File}
+     * @memberof Document
+     */
+    'file'?: File;
 }
 /**
  * 

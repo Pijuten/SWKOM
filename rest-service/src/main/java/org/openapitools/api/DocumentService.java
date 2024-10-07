@@ -15,11 +15,13 @@ public class DocumentService {
             List.of(new Document[]{
                     new Document()
                             .id(UUID.fromString("00000000-0000-0000-0000-000000000000"))
+                            .title("Erstes")
                             .description("description")
                             .username("username")
                             .uploadedDate("2023-06-13"),
                     new Document()
                             .id(UUID.fromString("00000000-0000-0000-0000-000000000001"))
+                            .title("Zweites")
                             .description("description")
                             .username("username")
                             .uploadedDate("2023-06-13")

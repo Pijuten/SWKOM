@@ -3,7 +3,7 @@
     <h3>Edit File: {{ file.id }}</h3>
     <form @submit.prevent="submitEdit">
       <label for="fileName">File Name:</label>
-      <input v-model="editedFile.id" type="text" id="fileId" readonly/>
+      <input v-model="editedFile.title" type="text" id="fileTitle" />
 
       <label for="fileDescription">Description:</label>
       <input v-model="editedFile.description" type="text" id="fileDescription" />

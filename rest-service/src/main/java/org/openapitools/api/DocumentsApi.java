@@ -5,6 +5,7 @@
  */
 package org.openapitools.api;
 
+import org.openapitools.api.ApiUtil;
 import org.openapitools.model.Document;
 import org.openapitools.model.DocumentContent;
 import java.util.UUID;
@@ -34,7 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-09-23T21:57:54.609887200+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-10-02T20:18:17.608293+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 @Validated
 @Tag(name = "documents", description = "Documents user uploads and maintains")
 public interface DocumentsApi {
@@ -79,12 +80,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"content\" : \"content\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
                     String exampleString = "<null> <id>550e8400-e29b-41d4-a716-446655440000</id> <content>aeiou</content> </null>";
-                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
@@ -135,7 +136,7 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
             }
@@ -220,12 +221,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "{ \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
-                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
+                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <title>Title</title> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
@@ -271,12 +272,12 @@ public interface DocumentsApi {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/json"))) {
                     String exampleString = "[ { \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" }, { \"uploaded_date\" : \"uploaded_date\", \"description\" : \"This is a description of the doc\", \"id\" : \"550e8400-e29b-41d4-a716-446655440000\", \"username\" : \"name\" } ]";
-                    ApiUtil.setExampleResponse(request, "application/json", exampleString);
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/json", exampleString);
                     break;
                 }
                 if (mediaType.isCompatibleWith(MediaType.valueOf("application/xml"))) {
-                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
-                    ApiUtil.setExampleResponse(request, "application/xml", exampleString);
+                    String exampleString = "<document> <id>550e8400-e29b-41d4-a716-446655440000</id> <title>Title</title> <username>name</username> <description>This is a description of the doc</description> <uploaded_date>aeiou</uploaded_date> </document>";
+                    org.openapitools.api.ApiUtil.setExampleResponse(request, "application/xml", exampleString);
                     break;
                 }
             }
