@@ -29,6 +29,7 @@
   import { defineEmits } from 'vue';
   import {valueOf} from "axios";
   import {ref} from 'vue';
+  import {meta} from "@typescript-eslint/parser";
 
   // Emit files-uploaded event
   const emit = defineEmits(['files-uploaded']);
@@ -66,7 +67,11 @@
     if (selectedFile.value) {
       const fileData = {
         file: selectedFile.value,
-        metadata: { ...metadata.value }
+        document: {
+          title: metadata.value.title,
+          username: metadata.value.username,
+          description: metadata.value.description
+        } as Document
       };
 
       uploadedFiles.value.push(fileData); // Add file and metadata to uploaded list

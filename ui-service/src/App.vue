@@ -1,8 +1,8 @@
 <template>
-  <HelloWorld msg="Paperless" />
+  <HelloWorld msg="Paperless"/>
   <div class="container">
-    <file-list :files="uploadedFiles" @delete-file="deleteFile" @edit-file="editFile" />
-    <file-upload @files-uploaded="addFiles" />
+    <file-list :files="uploadedFiles" @delete-file="deleteFile" @edit-file="editFile"/>
+    <file-upload @files-uploaded="addFiles"/>
   </div>
 </template>
 
@@ -19,9 +19,9 @@ const uploadedFiles = ref<Array<Document>>([]); // Initialize an empty array to 
 // Function to fetch files from the backend
 const fetchFiles = async () => {
   try {
-     // Get the data directly from the API
+    // Get the data directly from the API
     const response = await documentsApi.documentsGet();
-    uploadedFiles.value=response.data// Update the uploadedFiles with data from the backend
+    uploadedFiles.value = response.data// Update the uploadedFiles with data from the backend
     console.log(response.data)
   } catch (error) {
     console.error('Error fetching files:', error);
@@ -34,9 +34,21 @@ onMounted(() => {
   fetchFiles();
 });
 
-const addFiles = (files: Array<{ name: string }>) => {
-  uploadedFiles.value = [...uploadedFiles.value, ...files];
+const addFiles = async (files) => {
+  try {
+    // Check if files is an array and has at least one item
+    if (Array.isArray(files) && files.length > 0) {
+      // Assuming each file in the array has the document property
+      for (const fileData of files) {
+        await documentsApi.documentsPost(fileData.document);
+      }
+      await fetchFiles();
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
+
 
 const deleteFile = (index: string) => {
   documentsApi.documentsDocumentIdDelete(index);
@@ -51,7 +63,7 @@ const editFile = async (newDocument: Document) => {
   } catch (error) {
     console.error('Error editing file:', error);
   }
-};
+}
 </script>
 
 <style>
@@ -63,6 +75,7 @@ const editFile = async (newDocument: Document) => {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 .container {
   display: flex;
   justify-content: center;
