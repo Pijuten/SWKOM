@@ -38,6 +38,7 @@
 <script setup lang="ts">
   import { defineEmits, defineProps, ref } from 'vue';
   import EditForm from './EditForm.vue';
+  import {documentsApi} from "../../api/example";
 
   const props = defineProps({
     files: {
@@ -65,10 +66,16 @@
 
 
   // Show file content in a new window or tab
-  const viewFileContent = (file: any) => {
-    const reader = new FileReader();
-    reader.onload = (e: ProgressEvent<FileReader>) => {
-      const text = e.target?.result; // File content
+  const viewFileContent = async (file) => {
+    try {
+      // Check if file has 'id' and 'name' properties
+      if (!file || !file.id || !file.title) {
+        console.error("File object is missing 'id' or 'name' properties:", file);
+        return;
+      }
+
+      // Await the content of the file
+      const documentContent = (await documentsApi.documentsDocumentIdContentGet(file.id)).data;
 
       // Open a new window
       const newWindow = window.open('', '_blank'); // '_blank' opens a new tab
@@ -76,28 +83,29 @@
       // Write the content to the new window
       if (newWindow) {
         newWindow.document.write(`
-        <html lang="en">
-          <head>
-            <title>${file.name}</title>
-            <style>
-              body { font-family: Arial, sans-serif; padding: 20px; }
-              pre { white-space: pre-wrap; word-wrap: break-word; }
-            </style>
-          </head>
-          <body>
-            <h2>Content of ${file.name}</h2>
-            <pre>${text}</pre>
-            <button onclick="window.close();">Close</button>
-          </body>
-        </html>
+      <html lang="en">
+        <head>
+          <title>${file.title}</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            pre { white-space: pre-wrap; word-wrap: break-word; }
+          </style>
+        </head>
+        <body>
+          <h2>Content of ${file.title}</h2>
+          <pre>${documentContent.content}</pre>
+          <button onclick="window.close();">Close</button>
+        </body>
+      </html>
       `);
         newWindow.document.close(); // Close the document to render
       }
-    };
-
-    // Read file as text
-    reader.readAsText(file);
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+    }
   };
+
+
 
 
 
