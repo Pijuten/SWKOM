@@ -18,14 +18,11 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final DocumentContentRepository documentContentRepository;
-    private final DocumentMapper documentMapper;
-
     public DocumentService(DocumentRepository documentRepository,
                            DocumentContentRepository documentContentRepository,
                            DocumentMapper documentMapper) {
         this.documentRepository = documentRepository;
         this.documentContentRepository = documentContentRepository;
-        this.documentMapper = documentMapper;
     }
     public List<DocumentDto> getDocuments() {
         return new ArrayList<>(documentRepository.findAll());
