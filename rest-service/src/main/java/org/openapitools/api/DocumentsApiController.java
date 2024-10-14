@@ -43,9 +43,9 @@ public class DocumentsApiController implements DocumentsApi {
 
     @Override
     public ResponseEntity<Document> documentsPost(Document document) {
-        DocumentDto documentDto = documentMapper.entityToDto(document);
+        DocumentDto documentDto =  DocumentMapper.INSTANCE.entityToDto(document);
         DocumentDto createdDto = documentService.createDocument(documentDto);
-        return ResponseEntity.ok(documentMapper.dtoToEntity(createdDto));
+        return ResponseEntity.ok(DocumentMapper.INSTANCE.dtoToEntity(createdDto));
     }
 
     @Override

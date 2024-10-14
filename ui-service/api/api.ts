@@ -53,6 +53,12 @@ export interface Document {
      * @memberof Document
      */
     'uploaded_date'?: string;
+    /**
+     * 
+     * @type {File}
+     * @memberof Document
+     */
+    'file'?: File;
 }
 /**
  * 
@@ -80,46 +86,6 @@ export interface DocumentContent {
  */
 export const DocumentsApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
-        /**
-         * Allows users to upload new content for an existing document.
-         * @summary Updates the content of an existing document.
-         * @param {DocumentContent} documentContent 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        documentsContentPut: async (documentContent: DocumentContent, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'documentContent' is not null or undefined
-            assertParamExists('documentsContentPut', 'documentContent', documentContent)
-            const localVarPath = `/documents/content`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication swkom_auth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(documentContent, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
         /**
          * 
          * @param {string} documentId 
@@ -151,6 +117,50 @@ export const DocumentsApiAxiosParamCreator = function (configuration?: Configura
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Allows users to upload new content for an existing document.
+         * @summary Updates the content of an existing document.
+         * @param {string} documentId 
+         * @param {Document} document 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        documentsDocumentIdContentPut: async (documentId: string, document: Document, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'documentId' is not null or undefined
+            assertParamExists('documentsDocumentIdContentPut', 'documentId', documentId)
+            // verify required parameter 'document' is not null or undefined
+            assertParamExists('documentsDocumentIdContentPut', 'document', document)
+            const localVarPath = `/documents/{documentId}/content`
+                .replace(`{${"documentId"}}`, encodeURIComponent(String(documentId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication swkom_auth required
+            // http bearer authentication required
+            await setBearerAuthToObject(localVarHeaderParameter, configuration)
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(document, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -307,46 +317,6 @@ export const DocumentsApiAxiosParamCreator = function (configuration?: Configura
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Allows users to update a document.
-         * @summary Updates document.
-         * @param {Document} document 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        documentsPut: async (document: Document, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'document' is not null or undefined
-            assertParamExists('documentsPut', 'document', document)
-            const localVarPath = `/documents`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication swkom_auth required
-            // http bearer authentication required
-            await setBearerAuthToObject(localVarHeaderParameter, configuration)
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(document, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -358,19 +328,6 @@ export const DocumentsApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = DocumentsApiAxiosParamCreator(configuration)
     return {
         /**
-         * Allows users to upload new content for an existing document.
-         * @summary Updates the content of an existing document.
-         * @param {DocumentContent} documentContent 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async documentsContentPut(documentContent: DocumentContent, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<DocumentContent>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.documentsContentPut(documentContent, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DocumentsApi.documentsContentPut']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * 
          * @param {string} documentId 
          * @param {*} [options] Override http request option.
@@ -380,6 +337,20 @@ export const DocumentsApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.documentsDocumentIdContentGet(documentId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['DocumentsApi.documentsDocumentIdContentGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Allows users to upload new content for an existing document.
+         * @summary Updates the content of an existing document.
+         * @param {string} documentId 
+         * @param {Document} document 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async documentsDocumentIdContentPut(documentId: string, document: Document, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Document>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.documentsDocumentIdContentPut(documentId, document, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DocumentsApi.documentsDocumentIdContentPut']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -433,19 +404,6 @@ export const DocumentsApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['DocumentsApi.documentsPost']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
-        /**
-         * Allows users to update a document.
-         * @summary Updates document.
-         * @param {Document} document 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async documentsPut(document: Document, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Document>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.documentsPut(document, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['DocumentsApi.documentsPut']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
     }
 };
 
@@ -457,16 +415,6 @@ export const DocumentsApiFactory = function (configuration?: Configuration, base
     const localVarFp = DocumentsApiFp(configuration)
     return {
         /**
-         * Allows users to upload new content for an existing document.
-         * @summary Updates the content of an existing document.
-         * @param {DocumentContent} documentContent 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        documentsContentPut(documentContent: DocumentContent, options?: RawAxiosRequestConfig): AxiosPromise<DocumentContent> {
-            return localVarFp.documentsContentPut(documentContent, options).then((request) => request(axios, basePath));
-        },
-        /**
          * 
          * @param {string} documentId 
          * @param {*} [options] Override http request option.
@@ -474,6 +422,17 @@ export const DocumentsApiFactory = function (configuration?: Configuration, base
          */
         documentsDocumentIdContentGet(documentId: string, options?: RawAxiosRequestConfig): AxiosPromise<DocumentContent> {
             return localVarFp.documentsDocumentIdContentGet(documentId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Allows users to upload new content for an existing document.
+         * @summary Updates the content of an existing document.
+         * @param {string} documentId 
+         * @param {Document} document 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        documentsDocumentIdContentPut(documentId: string, document: Document, options?: RawAxiosRequestConfig): AxiosPromise<Document> {
+            return localVarFp.documentsDocumentIdContentPut(documentId, document, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes an existing document. Only allowed if the user owns the document.
@@ -514,16 +473,6 @@ export const DocumentsApiFactory = function (configuration?: Configuration, base
         documentsPost(document: Document, options?: RawAxiosRequestConfig): AxiosPromise<Document> {
             return localVarFp.documentsPost(document, options).then((request) => request(axios, basePath));
         },
-        /**
-         * Allows users to update a document.
-         * @summary Updates document.
-         * @param {Document} document 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        documentsPut(document: Document, options?: RawAxiosRequestConfig): AxiosPromise<Document> {
-            return localVarFp.documentsPut(document, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -535,18 +484,6 @@ export const DocumentsApiFactory = function (configuration?: Configuration, base
  */
 export class DocumentsApi extends BaseAPI {
     /**
-     * Allows users to upload new content for an existing document.
-     * @summary Updates the content of an existing document.
-     * @param {DocumentContent} documentContent 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DocumentsApi
-     */
-    public documentsContentPut(documentContent: DocumentContent, options?: RawAxiosRequestConfig) {
-        return DocumentsApiFp(this.configuration).documentsContentPut(documentContent, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
      * 
      * @param {string} documentId 
      * @param {*} [options] Override http request option.
@@ -555,6 +492,19 @@ export class DocumentsApi extends BaseAPI {
      */
     public documentsDocumentIdContentGet(documentId: string, options?: RawAxiosRequestConfig) {
         return DocumentsApiFp(this.configuration).documentsDocumentIdContentGet(documentId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Allows users to upload new content for an existing document.
+     * @summary Updates the content of an existing document.
+     * @param {string} documentId 
+     * @param {Document} document 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DocumentsApi
+     */
+    public documentsDocumentIdContentPut(documentId: string, document: Document, options?: RawAxiosRequestConfig) {
+        return DocumentsApiFp(this.configuration).documentsDocumentIdContentPut(documentId, document, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -602,18 +552,6 @@ export class DocumentsApi extends BaseAPI {
      */
     public documentsPost(document: Document, options?: RawAxiosRequestConfig) {
         return DocumentsApiFp(this.configuration).documentsPost(document, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Allows users to update a document.
-     * @summary Updates document.
-     * @param {Document} document 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof DocumentsApi
-     */
-    public documentsPut(document: Document, options?: RawAxiosRequestConfig) {
-        return DocumentsApiFp(this.configuration).documentsPut(document, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

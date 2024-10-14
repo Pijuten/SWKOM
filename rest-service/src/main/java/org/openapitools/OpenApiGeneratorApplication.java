@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.Module;
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.FullyQualifiedAnnotationBeanNameGe
     basePackages = {"org.openapitools", "org.openapitools.api" , "org.openapitools.configuration"},
     nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
 )
+@EntityScan("org.openapitools.services.dto")
 public class OpenApiGeneratorApplication {
 
     public static void main(String[] args) {

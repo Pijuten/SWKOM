@@ -28,7 +28,8 @@ public class DocumentService {
         this.documentMapper = documentMapper;
     }
     public List<DocumentDto> getDocuments() {
-        return new ArrayList<>(documentRepository.findAll());
+        return new ArrayList<>(documentRepository.findAll()
+        );
     }
 
     public DocumentDto getDocumentById(UUID documentId) {
