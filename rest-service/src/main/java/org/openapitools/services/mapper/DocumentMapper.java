@@ -14,7 +14,6 @@ public interface DocumentMapper extends BaseMapper<Document, DocumentDto> {
     DocumentMapper INSTANCE = Mappers.getMapper(DocumentMapper.class);
 
     @Override
-    @Mapping(target = "file", ignore = true)
     DocumentDto entityToDto(Document entity);
 
     @Override
