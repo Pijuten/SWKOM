@@ -27,9 +27,7 @@
 
 <script setup lang="ts">
   import { defineEmits } from 'vue';
-  import {valueOf} from "axios";
   import {ref} from 'vue';
-  import {meta} from "@typescript-eslint/parser";
 
   // Emit files-uploaded event
   const emit = defineEmits(['files-uploaded']);

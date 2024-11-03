@@ -3,7 +3,7 @@
     <h3>Uploaded files</h3>
     <ul>
       <li v-for="(file, index) in files" :key="index">
-        <span class="file-name"> {{file.name}} </span> <!--display file name-->
+        <span class="file-name"> {{file.title}} </span> <!--display file name-->
         <div class = file-actions>
         {{ file.id }}
         <img
