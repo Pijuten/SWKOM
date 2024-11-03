@@ -11,7 +11,7 @@
             src="../assets/carbon_edit.png"
             alt="Edit Icon"
             class="edit-icon"
-            @click="editFile(file.id)"
+            @click="editFile(file)"
         />
         <img
             title="Delete this file"
