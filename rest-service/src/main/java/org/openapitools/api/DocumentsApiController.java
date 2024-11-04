@@ -19,6 +19,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.annotation.Generated;
 
+
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-09-23T21:54:24.569617300+02:00[Europe/Berlin]", comments = "Generator version: 7.8.0")
 @Controller
 @RequestMapping("${openapi.sWKOM.base-path:}")
@@ -26,8 +27,6 @@ public class DocumentsApiController implements DocumentsApi {
     private final DocumentContentRepository documentContentRepository;
     private final DocumentService documentService;
     private final NativeWebRequest request;
-    private final DocumentMapper documentMapper;
-    private final DocumentContentMapper documentContentMapper;
 
     @Autowired
     public DocumentsApiController(DocumentService documentService,
@@ -37,8 +36,6 @@ public class DocumentsApiController implements DocumentsApi {
         this.documentService = documentService;
         this.request = request;
         this.documentContentRepository = documentContentRepository1;
-        this.documentMapper = documentMapper;
-        this.documentContentMapper = documentContentMapper;
     }
 
     @Override
@@ -51,14 +48,14 @@ public class DocumentsApiController implements DocumentsApi {
     @Override
     public ResponseEntity<Document> documentsDocumentIdGet(UUID documentId) {
         DocumentDto documentDto = documentService.getDocumentById(documentId);
-        return ResponseEntity.ok(documentMapper.dtoToEntity(documentDto));
+        return ResponseEntity.ok(DocumentMapper.INSTANCE.dtoToEntity(documentDto));
     }
 
     @Override
     public ResponseEntity<List<Document>> documentsGet() {
         List<DocumentDto> documentDtos = documentService.getDocuments();
         List<Document> documents = documentDtos.stream()
-                .map(documentMapper::dtoToEntity)
+                .map(DocumentMapper.INSTANCE::dtoToEntity)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(documents);
     }
@@ -66,8 +63,8 @@ public class DocumentsApiController implements DocumentsApi {
     //Update Documents
     @Override
     public ResponseEntity<Document> documentsPut(Document document) {
-        DocumentDto documentDto = documentMapper.entityToDto(document);
-        return ResponseEntity.ok(documentMapper.dtoToEntity(documentService.createDocument(documentDto)));
+        DocumentDto documentDto = DocumentMapper.INSTANCE.entityToDto(document);
+        return ResponseEntity.ok(DocumentMapper.INSTANCE.dtoToEntity(documentService.createDocument(documentDto)));
     }
 
     //Delete Documents
@@ -79,14 +76,14 @@ public class DocumentsApiController implements DocumentsApi {
     //Create/Update DocumentContent
     @Override
     public ResponseEntity<DocumentContent> documentsContentPut(DocumentContent documentContent) {
-        DocumentContentDto documentContentDto = documentContentMapper.entityToDto(documentContent);
-        return ResponseEntity.ok(documentContentMapper.dtoToEntity(documentService.saveDocumentContent(documentContentDto)));
+        DocumentContentDto documentContentDto = DocumentContentMapper.INSTANCE.entityToDto(documentContent);
+        return ResponseEntity.ok(DocumentContentMapper.INSTANCE.dtoToEntity(documentService.saveDocumentContent(documentContentDto)));
     }
 
     //Read DocumentContent
     @Override
     public ResponseEntity<DocumentContent> documentsDocumentIdContentGet(UUID documentId) {
-        return ResponseEntity.ok(documentContentMapper.dtoToEntity(documentService.getDocumentContent(documentId)));
+        return ResponseEntity.ok(DocumentContentMapper.INSTANCE.dtoToEntity(documentService.getDocumentContent(documentId)));
     }
 
 }
