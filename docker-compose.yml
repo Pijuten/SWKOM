@@ -8,6 +8,7 @@ services:
       - "8081:8081"
     depends_on:
       - postgres_db
+      - rabbitmq
     networks:
       - swkom3
 
@@ -38,6 +39,22 @@ services:
     networks:
       - swkom3
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"  # AMQP protocol port
+      - "15672:15672"  # Management interface port
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq-config:/etc/rabbitmq/conf.d
+    networks:
+      - swkom3
+
   adminer:
     image: adminer
     container_name: adminer
@@ -51,6 +68,7 @@ services:
 
 volumes:
   postgres_data:
+  rabbitmq_data:
 
 networks:
   swkom3:
