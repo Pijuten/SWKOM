@@ -5,10 +5,10 @@ info:
   title: SWKOM
   version: 1.0.11
 servers:
-- url: https://localhost:8081
+  - url: https://localhost:8081
 tags:
-- description: Documents user uploads and maintains
-  name: documents
+  - description: Documents user uploads and maintains
+    name: documents
 paths:
   /documents:
     get:
@@ -31,16 +31,16 @@ paths:
         "404":
           description: No documents found.
       security:
-      - swkom_auth:
-        - read:documents
+        - swkom_auth:
+            - read:documents
       summary: Get all documents
       tags:
-      - documents
+        - documents
       x-accepts:
-      - application/json
-      - application/xml
+        - application/json
+        - application/xml
       x-tags:
-      - tag: documents
+        - tag: documents
     post:
       description: Allows users to create a new document.
       requestBody:
@@ -61,15 +61,15 @@ paths:
         "422":
           description: Validation exception
       security:
-      - swkom_auth: []
+        - swkom_auth: []
       summary: Creates a new document.
       tags:
-      - documents
+        - documents
       x-content-type: application/json
       x-accepts:
-      - application/json
+        - application/json
       x-tags:
-      - tag: documents
+        - tag: documents
     put:
       description: Allows users to update a document.
       requestBody:
@@ -90,29 +90,29 @@ paths:
         "422":
           description: Validation exception
       security:
-      - swkom_auth: []
+        - swkom_auth: []
       summary: Updates document.
       tags:
-      - documents
+        - documents
       x-content-type: application/json
       x-accepts:
-      - application/json
+        - application/json
       x-tags:
-      - tag: documents
+        - tag: documents
   /documents/{documentId}:
     delete:
       description: Deletes an existing document. Only allowed if the user owns the
         document.
       parameters:
-      - description: ID of the document to retrieve.
-        explode: false
-        in: path
-        name: documentId
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - description: ID of the document to retrieve.
+          explode: false
+          in: path
+          name: documentId
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           description: Document successfully deleted
@@ -123,25 +123,25 @@ paths:
         "409":
           description: Conflict in document deletion
       security:
-      - swkom_auth: []
+        - swkom_auth: []
       summary: Deletes an existing document
       tags:
-      - documents
+        - documents
       x-accepts:
-      - application/json
+        - application/json
       x-tags:
-      - tag: documents
+        - tag: documents
     get:
       parameters:
-      - description: ID of the document to retrieve.
-        explode: false
-        in: path
-        name: documentId
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - description: ID of the document to retrieve.
+          explode: false
+          in: path
+          name: documentId
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           content:
@@ -157,27 +157,27 @@ paths:
         "404":
           description: Document not found
       security:
-      - swkom_auth:
-        - read:documents
+        - swkom_auth:
+            - read:documents
       summary: Retrieve an existing document
       tags:
-      - documents
+        - documents
       x-accepts:
-      - application/json
-      - application/xml
+        - application/json
+        - application/xml
       x-tags:
-      - tag: documents
+        - tag: documents
   /documents/{documentId}/content:
     get:
       parameters:
-      - explode: false
-        in: path
-        name: documentId
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: documentId
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       responses:
         "200":
           content:
@@ -193,26 +193,26 @@ paths:
         "404":
           description: Document not found
       security:
-      - swkom_auth:
-        - read:documents
+        - swkom_auth:
+            - read:documents
       tags:
-      - documents
+        - documents
       x-accepts:
-      - application/json
-      - application/xml
+        - application/json
+        - application/xml
       x-tags:
-      - tag: documents
+        - tag: documents
     put:
       description: Allows users to upload new content for an existing document.
       parameters:
-      - explode: false
-        in: path
-        name: documentId
-        required: true
-        schema:
-          format: uuid
-          type: string
-        style: simple
+        - explode: false
+          in: path
+          name: documentId
+          required: true
+          schema:
+            format: uuid
+            type: string
+          style: simple
       requestBody:
         content:
           application/json:
@@ -231,17 +231,17 @@ paths:
         "422":
           description: Validation exception
       security:
-      - swkom_auth:
-        - write:documents
-        - read:documents
+        - swkom_auth:
+            - write:documents
+            - read:documents
       summary: Updates the content of an existing document.
       tags:
-      - documents
+        - documents
       x-content-type: application/json
       x-accepts:
-      - application/json
+        - application/json
       x-tags:
-      - tag: documents
+        - tag: documents
 components:
   responses:
     UnauthorizedError:
@@ -266,6 +266,9 @@ components:
           type: string
         uploaded_date:
           type: string
+        file:
+          type: string
+          format: binary
       type: object
       xml:
         name: document

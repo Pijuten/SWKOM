@@ -1,28 +1,22 @@
 package org.openapitools.model;
 
-import java.net.URI;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import java.util.UUID;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
-import java.util.*;
 import javax.annotation.Generated;
 
 /**
  * Document
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-11-03T13:42:09.232626734+01:00[Europe/Vienna]", comments = "Generator version: 7.9.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-11-04T15:22:10.369678500+01:00[Europe/Berlin]", comments = "Generator version: 7.9.0")
 public class Document {
-
-  private String title;
 
   private UUID id;
 
@@ -32,25 +26,7 @@ public class Document {
 
   private String uploadedDate;
 
-  public Document title(String title) {
-    this.title = title;
-    return this;
-  }
-
-  /**
-   * Get title
-   * @return title
-   */
-  
-  @Schema(name = "title", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-  @JsonProperty("title")
-  public String getTitle() {
-    return title;
-  }
-
-  public void setTitle(String title) {
-    this.title = title;
-  }
+  private org.springframework.core.io.Resource file;
 
   public Document id(UUID id) {
     this.id = id;
@@ -132,6 +108,26 @@ public class Document {
     this.uploadedDate = uploadedDate;
   }
 
+  public Document file(org.springframework.core.io.Resource file) {
+    this.file = file;
+    return this;
+  }
+
+  /**
+   * Get file
+   * @return file
+   */
+  @Valid 
+  @Schema(name = "file", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @JsonProperty("file")
+  public org.springframework.core.io.Resource getFile() {
+    return file;
+  }
+
+  public void setFile(org.springframework.core.io.Resource file) {
+    this.file = file;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -141,27 +137,27 @@ public class Document {
       return false;
     }
     Document document = (Document) o;
-    return Objects.equals(this.title, document.title) &&
-        Objects.equals(this.id, document.id) &&
+    return Objects.equals(this.id, document.id) &&
         Objects.equals(this.username, document.username) &&
         Objects.equals(this.description, document.description) &&
-        Objects.equals(this.uploadedDate, document.uploadedDate);
+        Objects.equals(this.uploadedDate, document.uploadedDate) &&
+        Objects.equals(this.file, document.file);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(title, id, username, description, uploadedDate);
+    return Objects.hash(id, username, description, uploadedDate, file);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Document {\n");
-    sb.append("    title: ").append(toIndentedString(title)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    username: ").append(toIndentedString(username)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    uploadedDate: ").append(toIndentedString(uploadedDate)).append("\n");
+    sb.append("    file: ").append(toIndentedString(file)).append("\n");
     sb.append("}");
     return sb.toString();
   }

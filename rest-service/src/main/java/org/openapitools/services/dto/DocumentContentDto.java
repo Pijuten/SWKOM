@@ -12,6 +12,6 @@ import java.util.UUID;
 @Table(name = "document_contents")
 public class DocumentContentDto {
     @Id
-    private UUID documentId;
+    private UUID id;
     private String content;
 }
