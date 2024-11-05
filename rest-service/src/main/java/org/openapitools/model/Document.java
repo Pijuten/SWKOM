@@ -10,7 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 
 import javax.annotation.Generated;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
+// javax and jakarta are similiar,almost the same
 /**
  * Document
  */
@@ -20,13 +24,21 @@ public class Document {
 
   private UUID id;
 
+  @NotNull(message = "Username cannot be null")
   private String username;
 
+  @Size(max = 255, message = "Description must be less than 255 characters")
   private String description;
 
+  @Pattern(
+          regexp = "^\\d{4}-\\d{2}-\\d{2}$",
+          message = "Uploaded date must be in the format YYYY-MM-DD"
+  )
   private String uploadedDate;
 
+  @NotNull(message = "File must not be null")
   private org.springframework.core.io.Resource file;
+
 
   public Document id(UUID id) {
     this.id = id;
