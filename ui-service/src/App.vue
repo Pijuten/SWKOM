@@ -34,15 +34,15 @@ onMounted(() => {
   fetchFiles();
 });
 
-const addFiles = async (files) => {
+const addFiles = async (files: Document) => {
   try {
     // Check if files is an array and has at least one item
-    if (Array.isArray(files) && files.length > 0) {
+    if (files.title!==undefined) {
       // Assuming each file in the array has the document property
-      for (const fileData of files) {
-        await documentsApi.documentsPost(fileData.document);
-      }
+        await documentsApi.documentsPost(files);
       await fetchFiles();
+    }else{
+      console.log("No files")
     }
   } catch (error) {
     console.error(error);
@@ -57,9 +57,13 @@ const deleteFile = (index: string) => {
 
 const editFile = async (newDocument: Document) => {
   try {
-    await documentsApi.documentsDocumentIdContentPut(newDocument.id, newDocument);
-    // After successful edit, fetch the updated list
-    await fetchFiles();
+    if(newDocument.id!==undefined){
+      await documentsApi.documentsDocumentIdContentPut(newDocument.id, newDocument);
+      // After successful edit, fetch the updated list
+      await fetchFiles();
+    }else{
+      console.log('No file')
+    }
   } catch (error) {
     console.error('Error editing file:', error);
   }

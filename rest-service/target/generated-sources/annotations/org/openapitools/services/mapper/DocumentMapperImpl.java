@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-11-07T04:04:07+0100",
-    comments = "version: 1.6.2, compiler: javac, environment: Java 20.0.2 (Oracle Corporation)"
+    date = "2024-11-11T13:53:18+0100",
+    comments = "version: 1.6.2, compiler: javac, environment: Java 21.0.4 (Eclipse Adoptium)"
 )
 @Component
 public class DocumentMapperImpl implements DocumentMapper {

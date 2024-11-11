@@ -314,6 +314,7 @@ public interface DocumentsApi {
     
     default ResponseEntity<Document> documentsPost(
         @Parameter(name = "Document", description = "", required = true) @Valid @RequestBody Document document
+
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

@@ -28,6 +28,7 @@
 <script setup lang="ts">
   import { defineEmits } from 'vue';
   import {ref} from 'vue';
+  import {Document} from "../../api";
 
   // Emit files-uploaded event
   const emit = defineEmits(['files-uploaded']);
@@ -36,7 +37,7 @@
   // for metadata input
   const fileSelected = ref(false);
   const selectedFile = ref<File | null>(null);
-  const uploadedFiles = ref<Array<{ file: File, metadata: { title: string, description: string, username: string } }>>([]); // Store uploaded files
+  const uploadedFile = ref<Document>(); // Store uploaded files
   const metadata = ref({
     title: '',
     description: '',
@@ -63,23 +64,21 @@
   // Handle form submission (metadata + file)
   const submitForm = () => {
     if (selectedFile.value) {
-      const fileData = {
-        file: selectedFile.value,
-        document: {
+      console.log("File being submitted:", selectedFile.value); // Verify the file is not null
+      const  fileData: Document = {
           title: metadata.value.title,
           username: metadata.value.username,
           description: metadata.value.description
-        } as Document
       };
+      // Emit the event to parent component if needed
+      emit('files-uploaded', fileData);
 
-      uploadedFiles.value.push(fileData); // Add file and metadata to uploaded list
-
-      // Optionally emit the event to parent component
-      emit('files-uploaded', uploadedFiles.value);
-
-      resetForm(); // Reset the form and file selection
+      resetForm(); // Reset the form and file selection only after pushing data
+    } else {
+      console.warn("No file selected for submission");
     }
   };
+
 
   // Handle form and selection reset
   const resetForm = () => {

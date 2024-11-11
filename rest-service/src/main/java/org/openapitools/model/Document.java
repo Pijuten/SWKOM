@@ -36,7 +36,7 @@ public class Document {
   )
   private String uploadedDate;
 
-  @NotNull(message = "File must not be null")
+  //@NotNull(message = "File must not be null")
   private org.springframework.core.io.Resource file;
 
 

@@ -36,6 +36,13 @@ export interface Document {
      */
     'id'?: string;
     /**
+     *
+     * @type {string}
+     * @memberof Document
+     */
+    'title'?: string;
+
+    /**
      * 
      * @type {string}
      * @memberof Document
