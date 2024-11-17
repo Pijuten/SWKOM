@@ -1,11 +1,9 @@
 package org.openapitools.api;
 
-import org.openapitools.model.Document;
-import org.openapitools.model.DocumentContent;
+import org.openapitools.services.RabbitMQSenderService;
 import org.openapitools.services.dto.DocumentContentDto;
 import org.openapitools.services.dto.DocumentDto;
-import org.openapitools.services.mapper.DocumentMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,14 +16,14 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final DocumentContentRepository documentContentRepository;
-    private final DocumentMapper documentMapper;
+    private final RabbitMQSenderService rabbitMQSenderService;
 
     public DocumentService(DocumentRepository documentRepository,
-                           DocumentContentRepository documentContentRepository,
-                           DocumentMapper documentMapper) {
+                           DocumentContentRepository documentContentRepository, RabbitMQSenderService rabbitMQSenderService) {
         this.documentRepository = documentRepository;
         this.documentContentRepository = documentContentRepository;
-        this.documentMapper = documentMapper;
+
+        this.rabbitMQSenderService = rabbitMQSenderService;
     }
     public List<DocumentDto> getDocuments() {
         return new ArrayList<>(documentRepository.findAll()
@@ -37,7 +35,9 @@ public class DocumentService {
     }
 
     public DocumentDto createDocument(DocumentDto documentDto) {
-        return documentRepository.save(documentDto);
+       DocumentDto createdDocumentDto = documentRepository.save(documentDto);
+       rabbitMQSenderService.sendToOcrQueue(createdDocumentDto.getId().toString());
+       return createdDocumentDto;
     }
     public Void deleteDocumentById(UUID documentId) {
         documentRepository.deleteById(documentId);
@@ -50,5 +50,8 @@ public class DocumentService {
     public DocumentContentDto saveDocumentContent(DocumentContentDto documentContentDto){
         return documentContentRepository.save(documentContentDto);
     }
-
+    @RabbitListener(queues = "result_queue")
+    public String receiveDocumentCreated (String message) {
+        return message;
+    }
 }

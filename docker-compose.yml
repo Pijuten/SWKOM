@@ -8,8 +8,7 @@ services:
       - "8081:8081"
     depends_on:
       - postgres_db
-    networks:
-      - swkom3
+      - rabbitmq
 
   paperless_ui_service:
     build: ./ui-service
@@ -19,8 +18,6 @@ services:
       - "8080:80"
     depends_on:
       - paperless_rest_service
-    networks:
-      - swkom3
 
   postgres_db:
     image: postgres:latest
@@ -35,8 +32,19 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - swkom3
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    ports:
+      - "5672:5672"  # AMQP protocol port
+      - "15672:15672"  # Management interface port
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   adminer:
     image: adminer
@@ -46,12 +54,6 @@ services:
       - "8082:8080"
     depends_on:
       - postgres_db
-    networks:
-      - swkom3
 
 volumes:
   postgres_data:
-
-networks:
-  swkom3:
-    driver: bridge
