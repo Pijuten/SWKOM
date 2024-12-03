@@ -13,5 +13,8 @@ import java.util.UUID;
 public class DocumentContentDto {
     @Id
     private UUID id;
-    private String content;
+
+    private String bucketName; // The bucket where the file is stored in MinIO
+    private String objectName; // The file's unique name in the bucket
+    private String contentType; // MIME type of the file
 }
