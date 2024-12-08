@@ -1,57 +1,79 @@
 package org.openapitools.api;
 
+import io.minio.*;
+import org.openapitools.repositories.elasticsearch.DocumentElasticsearchRepository;
+import org.openapitools.repositories.jpa.DocumentContentJPARepository;
+import org.openapitools.repositories.jpa.DocumentJPARepository;
 import org.openapitools.services.RabbitMQSenderService;
 import org.openapitools.services.dto.DocumentContentDto;
 import org.openapitools.services.dto.DocumentDto;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class DocumentService {
 
-    private final DocumentRepository documentRepository;
-    private final DocumentContentRepository documentContentRepository;
+    private final DocumentJPARepository documentJPARepository;
+    private final DocumentElasticsearchRepository documentElasticsearchRepository;
+    private final DocumentContentJPARepository documentContentJPARepository;
     private final RabbitMQSenderService rabbitMQSenderService;
+    private final MinioFileUploader minioFileUploader;
 
-    public DocumentService(DocumentRepository documentRepository,
-                           DocumentContentRepository documentContentRepository, RabbitMQSenderService rabbitMQSenderService) {
-        this.documentRepository = documentRepository;
-        this.documentContentRepository = documentContentRepository;
+    public DocumentService(DocumentJPARepository documentJPARepository, DocumentElasticsearchRepository documentElasticsearchRepository,
+                           DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioClient minioClient, MinioFileUploader minioFileUploader) {
+        this.documentJPARepository = documentJPARepository;
+        this.documentElasticsearchRepository = documentElasticsearchRepository;
+        this.documentContentJPARepository = documentContentJPARepository;
 
         this.rabbitMQSenderService = rabbitMQSenderService;
+        this.minioFileUploader = minioFileUploader;
     }
     public List<DocumentDto> getDocuments() {
-        return new ArrayList<>(documentRepository.findAll()
+        return new ArrayList<>(documentJPARepository.findAll()
         );
     }
 
     public DocumentDto getDocumentById(UUID documentId) {
-        return documentRepository.findById(documentId).orElse(null);
+        return documentJPARepository.findById(documentId).orElse(null);
     }
 
-    public DocumentDto createDocument(DocumentDto documentDto) {
-       DocumentDto createdDocumentDto = documentRepository.save(documentDto);
+    public DocumentDto createDocument(DocumentDto documentDto, MultipartFile file) {
+        if(file == null) {
+            System.out.println("No file provided");
+            return null;
+        }
+       DocumentDto createdDocumentDto = documentJPARepository.save(documentDto);
+        minioFileUploader.upload(file, createdDocumentDto.getId());
        rabbitMQSenderService.sendToOcrQueue(createdDocumentDto.getId().toString());
        return createdDocumentDto;
     }
     public Void deleteDocumentById(UUID documentId) {
-        documentRepository.deleteById(documentId);
+        documentJPARepository.deleteById(documentId);
+        documentContentJPARepository.deleteById(documentId);
         return null;
     }
 
     public DocumentContentDto getDocumentContent(UUID documentId) {
-        return documentContentRepository.findById(documentId).orElse(null);
+        DocumentContentDto documentContent = documentContentJPARepository.findById(documentId).orElseThrow(
+                () -> new RuntimeException("Document content not found for ID: " + documentId)
+        );
+        return documentContent;
     }
-    public DocumentContentDto saveDocumentContent(DocumentContentDto documentContentDto){
-        return documentContentRepository.save(documentContentDto);
+
+    public DocumentDto updateFile(DocumentDto documentDto) {
+        return documentJPARepository.save(documentDto);
     }
-    @RabbitListener(queues = "result_queue")
-    public String receiveDocumentCreated (String message) {
-        return message;
+
+    public List<DocumentDto> searchDocumentContent(String search) {
+       List<DocumentContentDto> documentContentDtoList =  documentElasticsearchRepository.findByContent(search);
+       List<DocumentDto> documentDtoList = new ArrayList<>();
+       for(DocumentContentDto documentContentDto : documentContentDtoList){
+           documentDtoList.add(documentJPARepository.findById(documentContentDto.getId()).orElse(null));
+       }
+       return documentDtoList;
     }
 }

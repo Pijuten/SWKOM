@@ -2,29 +2,37 @@ package org.openapitools.model;
 
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.UUID;
 import javax.validation.Valid;
-
+import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 
+import java.util.*;
 import javax.annotation.Generated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  * DocumentContent
  */
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-11-03T13:42:09.232626734+01:00[Europe/Vienna]", comments = "Generator version: 7.9.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-12-07T17:55:25.345714006+01:00[Europe/Vienna]", comments = "Generator version: 7.10.0")
 public class DocumentContent {
 
   private UUID id;
 
-  @NotNull(message = "Content cannot be null")
-  @Size(min = 1, max = 10000, message = "Content must be between 1 and 10,000 characters")
   private String content;
+
+  public DocumentContent() {
+    super();
+  }
+
+  /**
+   * Constructor with only required parameters
+   */
+  public DocumentContent(UUID id, String content) {
+    this.id = id;
+    this.content = content;
+  }
 
   public DocumentContent id(UUID id) {
     this.id = id;
@@ -35,8 +43,8 @@ public class DocumentContent {
    * Get id
    * @return id
    */
-  @Valid 
-  @Schema(name = "id", example = "550e8400-e29b-41d4-a716-446655440000", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull @Valid 
+  @Schema(name = "id", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("id")
   public UUID getId() {
     return id;
@@ -55,8 +63,8 @@ public class DocumentContent {
    * Get content
    * @return content
    */
-  
-  @Schema(name = "content", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+  @NotNull 
+  @Schema(name = "content", requiredMode = Schema.RequiredMode.REQUIRED)
   @JsonProperty("content")
   public String getContent() {
     return content;

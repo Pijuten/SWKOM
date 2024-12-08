@@ -20,7 +20,7 @@ const uploadedFiles = ref<Array<Document>>([]); // Initialize an empty array to 
 const fetchFiles = async () => {
   try {
     // Get the data directly from the API
-    const response = await documentsApi.documentsGet();
+    const response = await documentsApi.documentGet();
     uploadedFiles.value = response.data// Update the uploadedFiles with data from the backend
     console.log(response.data)
   } catch (error) {
@@ -39,7 +39,7 @@ const addFiles = async (files: Document) => {
     // Check if files is an array and has at least one item
     if (files.title!==undefined) {
       // Assuming each file in the array has the document property
-        await documentsApi.documentsPost(files);
+        await documentsApi.documentPost(files.title,files.username,files.description,files.file);
       await fetchFiles();
     }else{
       console.log("No files")
@@ -51,14 +51,14 @@ const addFiles = async (files: Document) => {
 
 
 const deleteFile = (index: string) => {
-  documentsApi.documentsDocumentIdDelete(index);
+  documentsApi.documentDelete(index);
   uploadedFiles.value.splice(index, 1);
 };
 
 const editFile = async (newDocument: Document) => {
   try {
     if(newDocument.id!==undefined){
-      await documentsApi.documentsDocumentIdContentPut(newDocument.id, newDocument);
+      await documentsApi.documentPut(newDocument.title,newDocument.username,newDocument.description,newDocument.file,newDocument.id);
       // After successful edit, fetch the updated list
       await fetchFiles();
     }else{

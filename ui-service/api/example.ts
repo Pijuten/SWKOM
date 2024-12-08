@@ -1,4 +1,4 @@
-import { DocumentsApi } from './api';
+import { DefaultApi } from './api';
 import { Configuration } from './configuration';
 
 const config = new Configuration({
@@ -6,5 +6,5 @@ const config = new Configuration({
     accessToken: 'your-access-token-here'
   });
 
-export const documentsApi = new DocumentsApi(config);
+export const documentsApi = new DefaultApi(config);
 

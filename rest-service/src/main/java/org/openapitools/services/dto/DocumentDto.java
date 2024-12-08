@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "documents")
+
 public class DocumentDto {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,5 +18,4 @@ public class DocumentDto {
     private String title;
     private String username;
     private String description;
-    private String uploadedDate;
 }

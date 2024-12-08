@@ -3,9 +3,9 @@
     <h3>Uploaded files</h3>
     <ul>
       <li v-for="(file, index) in files" :key="index">
-        <span class="file-name"> {{file.id}} </span> <!--display file name-->
+        <span class="file-name"> {{file.title}} </span> <!--display file name-->
         <div class = file-actions>
-        {{ file.id }}
+        {{ file.description }}
         <img
             title="Edit this file"
             src="../assets/carbon_edit.png"
@@ -36,18 +36,18 @@
 </template>
 
 <script setup lang="ts">
-  import { defineEmits, defineProps, ref } from 'vue';
+import {defineEmits, defineProps, PropType, ref} from 'vue';
   import EditForm from './EditForm.vue';
   import {documentsApi} from "../../api/example";
-  import {Document} from "../../api";
+  import {Document, DocumentContent} from "../../api";
 
   const props = defineProps({
     files: {
-      type: Array as () => Document, // Define the type for the files
-      required: true
-    }
+      type: Array as PropType<Document[]>,
+      required: true, // or false if it's optional
+    },
   });
-  const emit = defineEmits(['delete-file', 'edit-file']);
+  const emit = defineEmits(['delete-file', 'edit-file','update-file']);
   const isEditing = ref(false);
   const selectedFile = ref(null);
   const deleteFile = (index: string) => {
@@ -57,8 +57,8 @@
     selectedFile.value = file;
     isEditing.value = true;
   };
-  const saveFileEdits = (updatedFile: any) => {
-    emit('update-file', updatedFile);
+  const saveFileEdits = (updatedFile: Document) => {
+    documentsApi.documentPut(updatedFile.title,updatedFile.username,updatedFile.description,updatedFile.file,updatedFile.id)
     isEditing.value = false;
   };
   const cancelEdit = () => {
@@ -67,7 +67,7 @@
 
 
   // Show file content in a new window or tab
-  const viewFileContent = async (file) => {
+  const viewFileContent = async (file:Document) => {
     try {
       // Check if file has 'id' and 'name' properties
       if (!file || !file.id || !file.title) {
@@ -76,7 +76,7 @@
       }
 
       // Await the content of the file
-      const documentContent = (await documentsApi.documentsDocumentIdContentGet(file.id)).data;
+      const documentContent: DocumentContent = (await documentsApi.documentcontentIdGet(file.id)).data;
 
       // Open a new window
       const newWindow = window.open('', '_blank'); // '_blank' opens a new tab

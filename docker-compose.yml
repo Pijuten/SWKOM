@@ -4,16 +4,36 @@ services:
     build: ./rest-service
     container_name: rest_service
     hostname: rest_service
+    networks:
+      - paperless_network
     ports:
       - "8081:8081"
     depends_on:
       - postgres_db
       - rabbitmq
+      - minio
+      - elasticsearch
+      - paperless_ocr_service
+
+  paperless_ocr_service:
+    build: ./ocr-service
+    container_name: ocr_service
+    networks:
+      - paperless_network
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres_db
+      - rabbitmq
+      - minio
+      - elasticsearch
 
   paperless_ui_service:
     build: ./ui-service
     container_name: paperless_ui_service
     hostname: paperless_ui_service
+    networks:
+      - paperless_network
     ports:
       - "8080:80"
     depends_on:
@@ -23,6 +43,8 @@ services:
     image: postgres:latest
     container_name: postgres_db
     hostname: postgres_db
+    networks:
+      - paperless_network
     environment:
       POSTGRES_DB: paperless
       POSTGRES_USER: paperless
@@ -35,25 +57,79 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: rabbitmq-container
     hostname: rabbitmq
+    networks:
+      - paperless_network
     ports:
-      - "5672:5672"  # AMQP protocol port
-      - "15672:15672"  # Management interface port
+      - "5672:5672"
+      - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    entrypoint: >
+      /bin/bash -c "
+      docker-entrypoint.sh rabbitmq-server;
+      sleep 10;
+      rabbitmqadmin declare queue name=result_queue durable=true &&
+      rabbitmqadmin declare queue name=ocr_queue durable=true
+      "
+  minio:
+    image: minio/minio
+    container_name: minio-container
+    hostname: minio
+    networks:
+      - paperless_network
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - ./data-minio:/data
 
   adminer:
     image: adminer
     container_name: adminer
     hostname: adminer
+    networks:
+      - paperless_network
     ports:
-      - "8082:8080"
+      - "9091:9091"
     depends_on:
       - postgres_db
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.3
+    container_name: elasticsearch-container
+    hostname: elasticsearch
+    networks:
+      - paperless_network
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - http.port=9200
+      - discovery.type=single-node
+      - http.max_content_length=10MB
+      - http.cors.enabled=true
+      - http.cors.allow-origin="*"
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-credentials=true
+      - network.publish_host=localhost
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+networks:
+  paperless_network:
+    driver: bridge
+
 volumes:
   postgres_data:
+  rabbitmq_data:
+  minio_data:
+  es_data:

@@ -1,221 +1,64 @@
 openapi: 3.0.3
 info:
-  description: This is the specification of the required API endpoints for the SWKOM
-    server.
-  title: SWKOM
-  version: 1.0.11
+  description: OpenAPI specification for the two Java models.
+  title: Example API
+  version: 1.0.0
 servers:
-  - url: https://localhost:8081
-tags:
-  - description: Documents user uploads and maintains
-    name: documents
+- url: /
 paths:
-  /documents:
-    get:
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Document'
-                type: array
-            application/xml:
-              schema:
-                items:
-                  $ref: '#/components/schemas/Document'
-                type: array
-          description: A list of documents is returned.
-        "401":
-          description: Access token is missing or invalid
-        "404":
-          description: No documents found.
-      security:
-        - swkom_auth:
-            - read:documents
-      summary: Get all documents
-      tags:
-        - documents
-      x-accepts:
-        - application/json
-        - application/xml
-      x-tags:
-        - tag: documents
-    post:
-      description: Allows users to create a new document.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Document'
-        required: true
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-          description: Document successfully created
-        "400":
-          description: Invalid input
-        "422":
-          description: Validation exception
-      security:
-        - swkom_auth: []
-      summary: Creates a new document.
-      tags:
-        - documents
-      x-content-type: application/json
-      x-accepts:
-        - application/json
-      x-tags:
-        - tag: documents
-    put:
-      description: Allows users to update a document.
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Document'
-        required: true
-      responses:
-        "201":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Document'
-          description: Document successfully created
-        "400":
-          description: Invalid input
-        "422":
-          description: Validation exception
-      security:
-        - swkom_auth: []
-      summary: Updates document.
-      tags:
-        - documents
-      x-content-type: application/json
-      x-accepts:
-        - application/json
-      x-tags:
-        - tag: documents
-  /documents/{documentId}:
+  /document:
     delete:
-      description: Deletes an existing document. Only allowed if the user owns the
-        document.
       parameters:
-        - description: ID of the document to retrieve.
-          explode: false
-          in: path
-          name: documentId
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
+      - description: ID of the Model1 object to delete
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: form
       responses:
-        "200":
-          description: Document successfully deleted
-        "401":
-          description: Access token is missing or invalid
-        "404":
-          description: Document not found
-        "409":
-          description: Conflict in document deletion
-      security:
-        - swkom_auth: []
-      summary: Deletes an existing document
-      tags:
-        - documents
+        "204":
+          description: Model1 object deleted successfully
+      summary: Delete a Model1 object
       x-accepts:
-        - application/json
-      x-tags:
-        - tag: documents
+      - application/json
     get:
-      parameters:
-        - description: ID of the document to retrieve.
-          explode: false
-          in: path
-          name: documentId
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Document'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/Document'
-          description: Document retrieved successfully
-        "401":
-          description: Access token is missing or invalid
-        "404":
-          description: Document not found
-      security:
-        - swkom_auth:
-            - read:documents
-      summary: Retrieve an existing document
-      tags:
-        - documents
+                items:
+                  $ref: '#/components/schemas/Document'
+                type: array
+          description: List of Model1 objects
+      summary: Get all Model1 objects
       x-accepts:
-        - application/json
-        - application/xml
-      x-tags:
-        - tag: documents
-  /documents/{documentId}/content:
-    get:
-      parameters:
-        - explode: false
-          in: path
-          name: documentId
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DocumentContent'
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/DocumentContent'
-          description: Document retrieved successfully
-        "401":
-          description: Access token is missing or invalid
-        "404":
-          description: Document not found
-      security:
-        - swkom_auth:
-            - read:documents
-      tags:
-        - documents
-      x-accepts:
-        - application/json
-        - application/xml
-      x-tags:
-        - tag: documents
-    put:
-      description: Allows users to upload new content for an existing document.
-      parameters:
-        - explode: false
-          in: path
-          name: documentId
-          required: true
-          schema:
-            format: uuid
-            type: string
-          style: simple
+      - application/json
+    post:
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Document'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Model1 object created successfully
+      summary: Create a new Model1 object
+      x-content-type: multipart/form-data
+      x-accepts:
+      - application/json
+    put:
+      requestBody:
+        content:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Document'
         required: true
@@ -225,66 +68,174 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Document'
-          description: Document content successfully updated
-        "400":
-          description: Invalid input
-        "422":
-          description: Validation exception
-      security:
-        - swkom_auth:
-            - write:documents
-            - read:documents
-      summary: Updates the content of an existing document.
-      tags:
-        - documents
+          description: Model1 object updated successfully
+      summary: Update an existing Model1 object
+      x-content-type: multipart/form-data
+      x-accepts:
+      - application/json
+  /document/{id}:
+    get:
+      parameters:
+      - description: ID of the Model1 object to retrieve
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+          description: Model1 object retrieved successfully
+        "404":
+          description: Model1 object not found
+      summary: Get a specific Model1 object by ID
+      x-accepts:
+      - application/json
+  /documentcontent:
+    delete:
+      parameters:
+      - description: ID of the Model2 object to delete
+        explode: true
+        in: query
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: form
+      responses:
+        "204":
+          description: Model2 object deleted successfully
+      summary: Delete a Model2 object
+      x-accepts:
+      - application/json
+    get:
+      parameters:
+      - description: Search query to filter Model2 objects
+        explode: true
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/DocumentContent'
+                type: array
+          description: List of Model2 objects
+      summary: Get all Model2 objects or search by a query string
+      x-accepts:
+      - application/json
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentContent'
+        required: true
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentContent'
+          description: Model2 object created successfully
+      summary: Create a new Model2 object
       x-content-type: application/json
       x-accepts:
-        - application/json
-      x-tags:
-        - tag: documents
+      - application/json
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentContent'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentContent'
+          description: Model2 object updated successfully
+      summary: Update an existing Model2 object
+      x-content-type: application/json
+      x-accepts:
+      - application/json
+  /documentcontent/{id}:
+    get:
+      parameters:
+      - description: ID of the Model2 object to retrieve
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          format: uuid
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentContent'
+          description: Model2 object retrieved successfully
+        "404":
+          description: Model2 object not found
+      summary: Get a specific Model2 object by ID
+      x-accepts:
+      - application/json
 components:
-  responses:
-    UnauthorizedError:
-      description: Access token is missing or invalid
   schemas:
     Document:
       example:
-        uploaded_date: uploaded_date
-        description: This is a description of the doc
-        id: 550e8400-e29b-41d4-a716-446655440000
-        username: name
+        file: ""
+        description: description
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        title: title
+        username: username
       properties:
         id:
-          example: 550e8400-e29b-41d4-a716-446655440000
           format: uuid
           type: string
+        title:
+          type: string
         username:
-          example: name
           type: string
         description:
-          example: This is a description of the doc
-          type: string
-        uploaded_date:
           type: string
         file:
-          type: string
           format: binary
+          type: string
+      required:
+      - description
+      - file
+      - title
+      - username
       type: object
-      xml:
-        name: document
     DocumentContent:
       example:
-        id: 550e8400-e29b-41d4-a716-446655440000
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         content: content
       properties:
         id:
-          example: 550e8400-e29b-41d4-a716-446655440000
           format: uuid
           type: string
         content:
           type: string
+      required:
+      - content
+      - id
       type: object
-  securitySchemes:
-    swkom_auth:
-      scheme: bearer
-      type: http
