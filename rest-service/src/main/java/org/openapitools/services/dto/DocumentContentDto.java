@@ -4,17 +4,26 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "document_contents")
+@org.springframework.data.elasticsearch.annotations.Document(indexName = "document")
 public class DocumentContentDto {
     @Id
     private UUID id;
+    @Lob
+    private String content;
 
-    private String bucketName; // The bucket where the file is stored in MinIO
-    private String objectName; // The file's unique name in the bucket
-    private String contentType; // MIME type of the file
+    public DocumentContentDto(UUID id, String content) {
+        this.id = id;
+        this.content = content;
+    }
+
+    public DocumentContentDto() {
+
+    }
 }

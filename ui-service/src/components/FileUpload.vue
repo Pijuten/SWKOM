@@ -66,9 +66,10 @@
     if (selectedFile.value) {
       console.log("File being submitted:", selectedFile.value); // Verify the file is not null
       const  fileData: Document = {
-          title: metadata.value.title,
           username: metadata.value.username,
-          description: metadata.value.description
+          title: metadata.value.title,
+          description: metadata.value.description,
+          file: selectedFile.value
       };
       // Emit the event to parent component if needed
       emit('files-uploaded', fileData);
