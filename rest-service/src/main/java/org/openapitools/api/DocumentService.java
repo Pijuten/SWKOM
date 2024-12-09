@@ -24,7 +24,7 @@ public class DocumentService {
     private final MinioFileUploader minioFileUploader;
 
     public DocumentService(DocumentJPARepository documentJPARepository, DocumentElasticsearchRepository documentElasticsearchRepository,
-                           DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioClient minioClient, MinioFileUploader minioFileUploader) {
+                           DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioFileUploader minioFileUploader) {
         this.documentJPARepository = documentJPARepository;
         this.documentElasticsearchRepository = documentElasticsearchRepository;
         this.documentContentJPARepository = documentContentJPARepository;
@@ -58,10 +58,9 @@ public class DocumentService {
     }
 
     public DocumentContentDto getDocumentContent(UUID documentId) {
-        DocumentContentDto documentContent = documentContentJPARepository.findById(documentId).orElseThrow(
+        return documentContentJPARepository.findById(documentId).orElseThrow(
                 () -> new RuntimeException("Document content not found for ID: " + documentId)
         );
-        return documentContent;
     }
 
     public DocumentDto updateFile(DocumentDto documentDto) {
@@ -69,11 +68,22 @@ public class DocumentService {
     }
 
     public List<DocumentDto> searchDocumentContent(String search) {
-       List<DocumentContentDto> documentContentDtoList =  documentElasticsearchRepository.findByContent(search);
-       List<DocumentDto> documentDtoList = new ArrayList<>();
-       for(DocumentContentDto documentContentDto : documentContentDtoList){
-           documentDtoList.add(documentJPARepository.findById(documentContentDto.getId()).orElse(null));
-       }
-       return documentDtoList;
+        // Fetch data from Elasticsearch repository
+        List<DocumentContentDto> documentContentDtoList = documentElasticsearchRepository.findByContentContaining(search);
+
+        // Return an empty list if the result is null or empty
+        if (documentContentDtoList == null || documentContentDtoList.isEmpty()) {
+            return new ArrayList<>(); // Return empty list instead of null
+        }
+
+        // Map the Elasticsearch results to DocumentDto
+        List<DocumentDto> documentDtoList = new ArrayList<>();
+        for (DocumentContentDto documentContentDto : documentContentDtoList) {
+            documentJPARepository.findById(documentContentDto.getId())
+                    .ifPresent(documentDtoList::add);
+        }
+
+        return documentDtoList;
     }
+
 }

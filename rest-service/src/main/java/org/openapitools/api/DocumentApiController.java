@@ -75,4 +75,13 @@ public class DocumentApiController implements DocumentApi {
         return ResponseEntity.ok(documentMapper.dtoToEntity(documentService.updateFile(documentDto)));
     }
 
+    @Override
+    public ResponseEntity<List<Document>> documentSearchGet(String search) {
+        List<DocumentDto> documentDtos = documentService.searchDocumentContent(search);
+        List<Document> documents = documentDtos.stream()
+                .map(documentMapper::dtoToEntity)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(documents);
+    }
+
 }

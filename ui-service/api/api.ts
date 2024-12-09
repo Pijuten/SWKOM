@@ -323,6 +323,43 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Get all Model2 objects or search by a query string
+         * @param {string} search Search query to filter Model2 objects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        documentSearchGet: async (search: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'search' is not null or undefined
+            assertParamExists('documentSearchGet', 'search', search)
+            const localVarPath = `/document/search`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (search !== undefined) {
+                localVarQueryParameter['search'] = search;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Delete a Model2 object
          * @param {string} id ID of the Model2 object to delete
          * @param {*} [options] Override http request option.
@@ -583,6 +620,19 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get all Model2 objects or search by a query string
+         * @param {string} search Search query to filter Model2 objects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async documentSearchGet(search: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Document>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.documentSearchGet(search, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['DefaultApi.documentSearchGet']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Delete a Model2 object
          * @param {string} id ID of the Model2 object to delete
          * @param {*} [options] Override http request option.
@@ -715,6 +765,16 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         },
         /**
          * 
+         * @summary Get all Model2 objects or search by a query string
+         * @param {string} search Search query to filter Model2 objects
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        documentSearchGet(search: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Document>> {
+            return localVarFp.documentSearchGet(search, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Delete a Model2 object
          * @param {string} id ID of the Model2 object to delete
          * @param {*} [options] Override http request option.
@@ -838,6 +898,18 @@ export class DefaultApi extends BaseAPI {
      */
     public documentPut(title: string, username: string, description: string, file: File, id?: string, options?: RawAxiosRequestConfig) {
         return DefaultApiFp(this.configuration).documentPut(title, username, description, file, id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get all Model2 objects or search by a query string
+     * @param {string} search Search query to filter Model2 objects
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public documentSearchGet(search: string, options?: RawAxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).documentSearchGet(search, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

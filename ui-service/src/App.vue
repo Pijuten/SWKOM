@@ -1,6 +1,7 @@
 <template>
   <HelloWorld msg="Paperless"/>
   <div class="container">
+    <SearchBar :files="uploadedFiles" @search-file="fetchSearchFiles"> </SearchBar>
     <file-list :files="uploadedFiles" @delete-file="deleteFile" @edit-file="editFile"/>
     <file-upload @files-uploaded="addFiles"/>
   </div>
@@ -12,7 +13,8 @@ import HelloWorld from './components/HelloWorld.vue';
 import FileList from './components/FileList.vue';
 import FileUpload from './components/FileUpload.vue';
 import {documentsApi} from '../api/example';
-import {Document} from "../api"; // Import the API
+import {Document} from "../api";
+import SearchBar from "@/components/SearchBar.vue";
 
 const uploadedFiles = ref<Array<Document>>([]); // Initialize an empty array to store files
 
@@ -28,6 +30,10 @@ const fetchFiles = async () => {
   }
 };
 
+const fetchSearchFiles = async (searchString:string) =>{
+  const response = await documentsApi.documentSearchGet(searchString)
+  uploadedFiles.value = response.data
+}
 
 // Lifecycle hook to fetch files when the component is mounted
 onMounted(() => {
