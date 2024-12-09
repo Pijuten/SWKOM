@@ -2,6 +2,7 @@ package org.openapitools.api;
 
 import io.minio.*;
 import io.minio.errors.MinioException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,11 +13,13 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
+
+@Slf4j
 @Component
-public class MinioFileUploader {
+public class MinioService {
 
     @Autowired
-    public MinioFileUploader(MinioClient minioClient) {
+    public MinioService(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
     private final MinioClient minioClient;
@@ -49,6 +52,15 @@ public class MinioFileUploader {
         }
         System.out.println("File uploaded: " + file.getOriginalFilename());
         return true;
+    }
+    public void deleteFile(String objectName) throws Exception {
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket("paperless")
+                        .object(objectName)
+                        .build()
+        );
+        log.info("File deleted: " + objectName);
     }
 
 }

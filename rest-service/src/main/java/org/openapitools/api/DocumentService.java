@@ -1,6 +1,5 @@
 package org.openapitools.api;
 
-import io.minio.*;
 import org.openapitools.repositories.elasticsearch.DocumentElasticsearchRepository;
 import org.openapitools.repositories.jpa.DocumentContentJPARepository;
 import org.openapitools.repositories.jpa.DocumentJPARepository;
@@ -21,16 +20,16 @@ public class DocumentService {
     private final DocumentElasticsearchRepository documentElasticsearchRepository;
     private final DocumentContentJPARepository documentContentJPARepository;
     private final RabbitMQSenderService rabbitMQSenderService;
-    private final MinioFileUploader minioFileUploader;
+    private final MinioService minioService;
 
     public DocumentService(DocumentJPARepository documentJPARepository, DocumentElasticsearchRepository documentElasticsearchRepository,
-                           DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioFileUploader minioFileUploader) {
+                           DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioService minioService) {
         this.documentJPARepository = documentJPARepository;
         this.documentElasticsearchRepository = documentElasticsearchRepository;
         this.documentContentJPARepository = documentContentJPARepository;
 
         this.rabbitMQSenderService = rabbitMQSenderService;
-        this.minioFileUploader = minioFileUploader;
+        this.minioService = minioService;
     }
     public List<DocumentDto> getDocuments() {
         return new ArrayList<>(documentJPARepository.findAll()
@@ -47,13 +46,18 @@ public class DocumentService {
             return null;
         }
        DocumentDto createdDocumentDto = documentJPARepository.save(documentDto);
-        minioFileUploader.upload(file, createdDocumentDto.getId());
+        minioService.upload(file, createdDocumentDto.getId());
        rabbitMQSenderService.sendToOcrQueue(createdDocumentDto.getId().toString());
        return createdDocumentDto;
     }
     public Void deleteDocumentById(UUID documentId) {
-        documentJPARepository.deleteById(documentId);
-        documentContentJPARepository.deleteById(documentId);
+        try {
+            documentJPARepository.deleteById(documentId);
+            documentContentJPARepository.deleteById(documentId);
+            minioService.deleteFile(documentId.toString());
+        }catch(Exception e){
+
+        }
         return null;
     }
 
