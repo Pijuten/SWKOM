@@ -106,7 +106,6 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - http.port=9200
-      - discovery.type=single-node
       - http.max_content_length=10MB
       - http.cors.enabled=true
       - http.cors.allow-origin="*"
