@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface DocumentElasticsearchRepository extends ElasticsearchRepository<DocumentContentDto, UUID> {
+public interface DocumentElasticsearchRepository extends ElasticSearchRepository<DocumentContentDto, UUID> {
     @Query("{\"match\": {\"content\": \"?0\"}}")
     List<DocumentContentDto> findByContentContaining(String search);
 
