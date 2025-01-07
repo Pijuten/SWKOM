@@ -9,11 +9,10 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - postgres_db
-      - rabbitmq
-      - minio
-      - elasticsearch
-      - paperless_ocr_service
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
 
   paperless_ocr_service:
     build: ./ocr-service
@@ -23,10 +22,10 @@ services:
     ports:
       - "8082:8082"
     depends_on:
-      - postgres_db
-      - rabbitmq
-      - minio
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
 
   paperless_ui_service:
     build: ./ui-service
@@ -70,6 +69,7 @@ services:
     volumes:
       - ./rabbitmq-setup.sh:/usr/local/bin/rabbitmq-setup.sh
     entrypoint: ["bash", "/usr/local/bin/rabbitmq-setup.sh"]
+
   minio:
     image: minio/minio
     container_name: minio-container
@@ -119,6 +119,11 @@ services:
       - "9300:9300"
     volumes:
       - es_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
 
   elasticsearch-ui:
     image: appbaseio/dejavu:latest
@@ -129,6 +134,7 @@ services:
       - "1358:1358"
     environment:
       ELASTICSEARCH_URL: http://elasticsearch-container:9200
+
 networks:
   paperless_network:
     driver: bridge
