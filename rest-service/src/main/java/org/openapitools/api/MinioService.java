@@ -26,14 +26,16 @@ public class MinioService {
 
     public boolean upload(MultipartFile file, UUID id) {
         try {
+            log.info("Uploading file: " + file.getOriginalFilename());
 
             // Make 'paperless' bucket if not exist.
             boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket("paperless").build());
             if (!found) {
                 // Make a new bucket called 'paperless'.
+                log.info("Creating new bucket 'paperless'");
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket("paperless").build());
             } else {
-                System.out.println("Bucket 'paperless' already exists.");
+                log.info("'paperless' bucket already exists.");
             }
 
             String fileName = id.toString();
@@ -46,21 +48,29 @@ public class MinioService {
                             .contentType(file.getContentType())
                             .build());
             inputStream.close();
+            log.info("File uploaded successfully: {} for ID: {}", fileName, id);
+            return true;
+
         } catch (MinioException | InvalidKeyException | IOException | NoSuchAlgorithmException e) {
-            System.out.println("Error occurred: " + e);
+            log.error("Error occurred during file upload for ID: {}", id,e);
             return false;
         }
-        System.out.println("File uploaded: " + file.getOriginalFilename());
-        return true;
     }
+
     public void deleteFile(String objectName) throws Exception {
-        minioClient.removeObject(
-                RemoveObjectArgs.builder()
-                        .bucket("paperless")
-                        .object(objectName)
-                        .build()
-        );
-        log.info("File deleted: " + objectName);
+        try {
+            log.info("Deleting file: {}", objectName);
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket("paperless")
+                            .object(objectName)
+                            .build()
+            );
+            log.info("File deleted successfully: {}", objectName);
+        } catch (MinioException e) {
+            log.error("Error occurred during file deletion: {}", objectName, e);
+            throw new RuntimeException("Failed to delete file: " + objectName, e);
+        }
     }
 
 }

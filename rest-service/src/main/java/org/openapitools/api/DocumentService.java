@@ -1,5 +1,7 @@
 package org.openapitools.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.openapitools.repositories.elasticsearch.DocumentElasticsearchRepository;
 import org.openapitools.repositories.jpa.DocumentContentJPARepository;
 import org.openapitools.repositories.jpa.DocumentJPARepository;
@@ -21,6 +23,7 @@ public class DocumentService {
     private final DocumentContentJPARepository documentContentJPARepository;
     private final RabbitMQSenderService rabbitMQSenderService;
     private final MinioService minioService;
+    private static final Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
     public DocumentService(DocumentJPARepository documentJPARepository, DocumentElasticsearchRepository documentElasticsearchRepository,
                            DocumentContentJPARepository documentContentJPARepository, RabbitMQSenderService rabbitMQSenderService, MinioService minioService) {
@@ -31,47 +34,88 @@ public class DocumentService {
         this.rabbitMQSenderService = rabbitMQSenderService;
         this.minioService = minioService;
     }
+
     public List<DocumentDto> getDocuments() {
-        return new ArrayList<>(documentJPARepository.findAll()
-        );
+        try {
+            return new ArrayList<>(documentJPARepository.findAll());
+        }
+        catch (Exception e) {
+            logger.error("Error fetching all documents", e);
+            throw new RuntimeException("Failed to fetch all documents", e);
+        }
     }
 
     public DocumentDto getDocumentById(UUID documentId) {
-        return documentJPARepository.findById(documentId).orElse(null);
+       try {
+           return documentJPARepository.findById(documentId).orElse(null);
+       }
+       catch(Exception e) {
+           logger.error("Error fetching document with ID: {}", documentId, e);
+           throw new RuntimeException("Failed to fetch document", e);
+       }
     }
 
     public DocumentDto createDocument(DocumentDto documentDto, MultipartFile file) {
-        if(file == null) {
-            System.out.println("No file provided");
-            return null;
+        try {
+            if (file == null) {
+                logger.warn("No file provided for document creation");
+                throw new IllegalArgumentException("No file provided for document creation");
+            }
+
+            DocumentDto createdDocumentDto = documentJPARepository.save(documentDto);
+            minioService.upload(file, createdDocumentDto.getId());
+            rabbitMQSenderService.sendToOcrQueue(createdDocumentDto.getId().toString());
+
+            logger.info("Document created successfully: {}", documentDto.getId());
+            return createdDocumentDto;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            throw new IllegalArgumentException("Document creation failed", e);
         }
-       DocumentDto createdDocumentDto = documentJPARepository.save(documentDto);
-        minioService.upload(file, createdDocumentDto.getId());
-       rabbitMQSenderService.sendToOcrQueue(createdDocumentDto.getId().toString());
-       return createdDocumentDto;
+
     }
+
     public Void deleteDocumentById(UUID documentId) {
+        logger.info("Deleting document with ID: {}", documentId);
+
         try {
             documentJPARepository.deleteById(documentId);
             documentContentJPARepository.deleteById(documentId);
             minioService.deleteFile(documentId.toString());
-        }catch(Exception e){
 
+            logger.info("Document deleted successfully: {}", documentId);
+        }catch(Exception e){
+            logger.error("Failed to delete document with ID: {}",documentId, e);
+            throw new IllegalArgumentException("Failed to delete document", e);
         }
         return null;
     }
 
     public DocumentContentDto getDocumentContent(UUID documentId) {
+       try{
         return documentContentJPARepository.findById(documentId).orElseThrow(
                 () -> new RuntimeException("Document content not found for ID: " + documentId)
         );
     }
+       catch (Exception e){
+       logger.error("Error fetching document content", e);
+       throw e;
+       }
+    }
 
     public DocumentDto updateFile(DocumentDto documentDto) {
-        return documentJPARepository.save(documentDto);
+       try{
+           return documentJPARepository.save(documentDto);
+       }
+       catch (Exception e){
+           logger.error("Error updating document content", e);
+           throw new RuntimeException("Error updating document content", e);
+       }
     }
 
     public List<DocumentDto> searchDocumentContent(String search) {
+       try{
         // Fetch data from Elasticsearch repository
         List<DocumentContentDto> documentContentDtoList = documentElasticsearchRepository.findByContentContaining(search);
 
@@ -88,6 +132,11 @@ public class DocumentService {
         }
 
         return documentDtoList;
+    }
+       catch (Exception e){
+       logger.error("Error searching document", e);
+       throw new RuntimeException("Error searching document", e);
+       }
     }
 
 }
