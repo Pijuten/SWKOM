@@ -138,6 +138,37 @@
 		<artifactId>tess4j</artifactId>
 		<version>5.13.0</version>
 	</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+			<!-- SLF4J API (for Lombok @Slf4j) -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.36</version> <!-- Ensure this is the latest -->
+			</dependency>
+
+			<!-- Log4j 2 API (provides logging API) -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>2.23.1</version> <!-- Ensure this is the correct version -->
+			</dependency>
+
+			<!-- Log4j 2 Core (the actual implementation of Log4j) -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>2.23.1</version> <!-- Ensure this matches the API version -->
+			</dependency>
+
+
 	</dependencies>
+
+
 
 </project>

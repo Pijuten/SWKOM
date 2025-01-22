@@ -1,5 +1,6 @@
 package org.openapitools.api;
 
+import lombok.extern.slf4j.Slf4j;
 import org.openapitools.model.Document;
 import org.openapitools.model.DocumentContent;
 
@@ -18,7 +19,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 
 
 import javax.annotation.Generated;
-
+@Slf4j
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-12-07T17:55:25.345714006+01:00[Europe/Vienna]", comments = "Generator version: 7.10.0")
 @Controller
 @RequestMapping("${openapi.example.base-path:}")
@@ -44,31 +45,62 @@ public class DocumentcontentApiController implements DocumentcontentApi {
 
     @Override
     public ResponseEntity<Void> documentcontentDelete(UUID id) {
-        return DocumentcontentApi.super.documentcontentDelete(id);
+        try {
+            log.info("Document content deleted successfully with id: {}", id);
+            return DocumentcontentApi.super.documentcontentDelete(id);
+        } catch (Exception e) {
+            log.error("Error deleting document content with ID: {}", id, e.getMessage());
+            //return internal service error
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @Override
     public ResponseEntity<List<Document>> documentcontentGet(String search) {
-        List<DocumentDto> documentDtos = documentService.searchDocumentContent(search);
-        List<Document> documents = documentDtos.stream()
-                .map(documentMapper::dtoToEntity)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(documents);
+        try {
+            List<DocumentDto> documentDtos = documentService.searchDocumentContent(search);
+            List<Document> documents = documentDtos.stream()
+                    .map(documentMapper::dtoToEntity)
+                    .collect(Collectors.toList());
+            log.info("Found {} documents for search term: {}", documentDtos.size(), search);
+            return ResponseEntity.ok(documents);
+
+        } catch (Exception e) {
+            log.info("Failed fetching documents with search term: {}", search, e);
+            return ResponseEntity.status(500).build(); // internal service error
+        }
     }
 
     @Override
     public ResponseEntity<DocumentContent> documentcontentIdGet(UUID id) {
-        return ResponseEntity.ok(documentContentMapper.dtoToEntity(documentService.getDocumentContent(id)));
+        try {
+            log.info("Successfully retrieved Document content with id: {}", id);
+            return ResponseEntity.ok(documentContentMapper.dtoToEntity(documentService.getDocumentContent(id)));
+        } catch (Exception e) {
+            log.info("Failed retrieving document content with ID: {}", id, e);
+        }
+        return ResponseEntity.status(404).build(); // not found
     }
 
     @Override
     public ResponseEntity<DocumentContent> documentcontentPost(DocumentContent documentContent) {
-        return DocumentcontentApi.super.documentcontentPost(documentContent);
+        try {
+            return DocumentcontentApi.super.documentcontentPost(documentContent);
+        } catch (Exception e) {
+            log.info("Failed posting document content with ID: {}", documentContent.getId(), e);
+            return ResponseEntity.status(500).build(); // internal service error
+        }
     }
 
     @Override
     public ResponseEntity<DocumentContent> documentcontentPut(DocumentContent documentContent) {
-        return DocumentcontentApi.super.documentcontentPut(documentContent);
-    }
+        try {
+            log.info("Successfully updated Document content with id: {}", documentContent.getId());
+            return DocumentcontentApi.super.documentcontentPut(documentContent);
+        } catch (Exception e) {
+            log.info("Failed updating document content with ID: {}", documentContent.getId(), e);
+            return ResponseEntity.status(500).build();
+        }
+        }
 
 }

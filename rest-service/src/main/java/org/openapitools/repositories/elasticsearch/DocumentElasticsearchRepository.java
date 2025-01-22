@@ -2,7 +2,6 @@ package org.openapitools.repositories.elasticsearch;
 
 import org.openapitools.services.dto.DocumentContentDto;
 import org.springframework.data.elasticsearch.annotations.Query;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
